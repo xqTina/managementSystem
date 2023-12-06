@@ -164,9 +164,8 @@ public class DatatableController {
     @GetMapping("/data_zhenxianji/export")
     public JsonResult dataZhenXianJiExport(@RequestParam(value = "begin") String begin,
                                           @RequestParam(value = "end") String end,
-                                           @RequestParam(value = "dtuId",defaultValue = "0") int dtuId,
-                                           @RequestParam(value = "number",defaultValue = "0") int number) {
-        if (begin.equals("")||end.equals("")||dtuId==0||number==0){
+                                           @RequestParam(value = "dtuId",defaultValue = "0") int dtuId) {
+        if (begin.equals("")||end.equals("")||dtuId==0){
             return new JsonResult(-1,"请填写完整");
         }
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -175,14 +174,14 @@ public class DatatableController {
             return new JsonResult(
                     0,
                     "success",
-                    myDataService.getDataZhenXianJiExport(auth.getName(), begin, end,dtuId,number, "desc"),
+                    myDataService.getDataZhenXianJiExport(auth.getName(), begin, end,dtuId, "desc"),
                     myDataService.getDataZhenXianJiCount(auth.getName()));
         } else if (auth.getAuthorities().toString().equals(RoleVo.ADMIN) || auth.getAuthorities().toString().equals(RoleVo.DEV)) {
             // 管理员，返回全部
             return new JsonResult(
                     0,
                     "success",
-                    myDataService.getDataZhenXianJiExport(begin,end,dtuId,number, "desc"),
+                    myDataService.getDataZhenXianJiExport(begin,end,dtuId, "desc"),
                     myDataService.getDataZhenXianJiCount());
         }
         // 匿名用户，未登录

@@ -188,7 +188,7 @@ public interface MyDataService {
      * @param orderBy  asc 正序 desc 倒叙
      * @return List
      */
-    List<DataZhenXianJiExportDto> getDataZhenXianJiExport(String username, String begin, String end, int dtuId, int number, String orderBy);
+    List<DataZhenXianJiExportDto> getDataZhenXianJiExport(String username, String begin, String end, int dtuId, String orderBy);
 
-    List<DataZhenXianJiExportDto> getDataZhenXianJiExport(String begin, String end,int dtuId, int number, String desc);
+    List<DataZhenXianJiExportDto> getDataZhenXianJiExport(String begin, String end,int dtuId, String desc);
 }

@@ -122,13 +122,13 @@ public class MyDataServiceImpl implements MyDataService {
     }
 
     @Override
-    public List<DataZhenXianJiExportDto> getDataZhenXianJiExport(String username, String begin, String end, int dtuId, int number, String orderBy) {
-        return myDataZhenXianJiMapper.getDataZhenXianJiExport(username,begin,end,dtuId,number,orderBy);
+    public List<DataZhenXianJiExportDto> getDataZhenXianJiExport(String username, String begin, String end, int dtuId,  String orderBy) {
+        return myDataZhenXianJiMapper.getDataZhenXianJiExport(username,begin,end,dtuId,orderBy);
     }
 
     @Override
-    public List<DataZhenXianJiExportDto> getDataZhenXianJiExport(String begin, String end, int dtuId,int number, String orderBy) {
-        return myDataZhenXianJiMapper.selectListByLimitOrderByExport(begin,end,dtuId,number,orderBy);
+    public List<DataZhenXianJiExportDto> getDataZhenXianJiExport(String begin, String end, int dtuId, String orderBy) {
+        return myDataZhenXianJiMapper.selectListByLimitOrderByExport(begin,end,dtuId,orderBy);
     }
 
 

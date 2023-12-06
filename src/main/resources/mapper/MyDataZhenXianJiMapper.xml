@@ -161,7 +161,6 @@
         order by
         data_zhenxianji.id
         ${orderBy}
-        limit #{number}
     </select>
 
     <select id="selectListByLimitOrderByExport" resultMap="BaseResultExportMap">
@@ -178,7 +177,6 @@
         order by
         data_zhenxianji.id
         ${orderBy}
-        limit #{number}
     </select>
 
     <select id="selectCountByUsername" resultType="java.lang.Integer">

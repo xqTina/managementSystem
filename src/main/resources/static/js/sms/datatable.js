@@ -153,17 +153,17 @@ function exportExcel(){
                 </div>
                 <div>
                     <div class="layui-inline">
-                        <label class="layui-form-label">DTU网关:</label>
+                        <label class="layui-form-label">DTU编号:</label>
                          <div class="layui-input-inline">
                             <input name="dtu" placeholder="DTU" class="layui-input" id="ID-dropdown-demo-base-input"  lay-verify="required" lay-reqtext="请选择DTU网关">
                          </div>
                     </div>
-                    <div class="layui-inline">
-                        <label class="layui-form-label">数据条数:</label>
-                         <div class="layui-input-inline">
-                            <input name="number" value="50" type="number" placeholder="请输入需导出数据的条数" class="layui-input" id="zhenxian-number"  lay-verify="required" lay-reqtext="请填写数据条数">
-                         </div>
-                    </div>
+<!--                    <div class="layui-inline">-->
+<!--                        <label class="layui-form-label">数据条数:</label>-->
+<!--                         <div class="layui-input-inline">-->
+<!--                            <input name="number" value="50" type="number" placeholder="请输入需导出数据的条数" class="layui-input" id="zhenxian-number"  lay-verify="required" lay-reqtext="请填写数据条数">-->
+<!--                         </div>-->
+<!--                    </div>-->
                 </div>
             </div>
     </form>`;
@@ -176,7 +176,7 @@ function exportExcel(){
             $.ajax({
                 url: '/datatable/data_zhenxianji/export',
                 type: 'GET',
-                data: {begin: $("#begin").val(), end: $("#end").val(),dtuId:curSelectedDtu,number:$("#zhenxian-number").val()},
+                data: {begin: $("#begin").val(), end: $("#end").val(),dtuId:curSelectedDtu},
                 success: function (res) {
                     console.log(res)
                     // 关闭等待层

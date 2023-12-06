@@ -71,9 +71,9 @@ public interface MyDataZhenXianJiMapper {
      * @param orderBy  asc 正序 desc 倒叙
      * @return List
      */
-    List<DataZhenXianJiExportDto> getDataZhenXianJiExport(@Param("username")String username, @Param("begin") String begin, @Param("end") String end, @Param("dtuId") int dtuId, @Param("number") int number, @Param("orderBy") String orderBy);
+    List<DataZhenXianJiExportDto> getDataZhenXianJiExport(@Param("username")String username, @Param("begin") String begin, @Param("end") String end, @Param("dtuId") int dtuId,  @Param("orderBy") String orderBy);
 
-    List<DataZhenXianJiExportDto> selectListByLimitOrderByExport(@Param("begin") String begin, @Param("end") String end,@Param("dtuId") int dtuId, @Param("number") int number,@Param("orderBy") String orderBy);
+    List<DataZhenXianJiExportDto> selectListByLimitOrderByExport(@Param("begin") String begin, @Param("end") String end,@Param("dtuId") int dtuId,@Param("orderBy") String orderBy);
 
     /**
      * 用户查询正弦计数据数量
