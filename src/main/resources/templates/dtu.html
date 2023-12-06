@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html class="x-admin-sm" lang="zh-cn" xmlns:th="http://www.thymeleaf.org">
+<div th:replace="~{common/common.html::head('DTU管理-传感器信息管理平台')}"></div>
+<body onload="xadmin.page_loading()">
+<div th:replace="~{common/common.html::x-nav('设备管理','DTU设备管理')}"></div>
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-body search">
+                    <div class="layui-form-item" style="margin-bottom: 0;padding-bottom: 0;padding-top: 10px">
+                        <div class="layui-inline">
+                            <div class="layui-input-inline">
+                                <input autocomplete="off" class="layui-input" id="table_reload" placeholder="请输入搜索内容"
+                                       type="text">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <div class="layui-input-inline" style="width: auto;">
+                                <button class="layui-btn" data-type="reload" id="search"><i
+                                        class="layui-icon layui-icon-search"></i>查询
+                                </button>
+                                <a class="layui-btn btnOption  layui-btn-small btnAdd" href="javascript:" id="add"
+                                   onclick="addDtu()"><i class="layui-icon layui-icon-add-1"></i>添加DTU</a>
+                                <a class="layui-btn btnOption layui-btn-danger layui-btn-small btnBatchDrop"
+                                   data-type="deleteCheckData" href="javascript:" id="batchDrop"><i
+                                        class="layui-icon layui-icon-delete"></i>批量删除</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-card-body ">
+                    <table class="layui-table" id="LAY-dtu-table"
+                           lay-data="{height: 'full-200', cellMinWidth: 80, page: true, limit:30, url:'/dtu/table'}">
+                        <thead>
+                        <tr>
+                            <th lay-data="{type:'checkbox'}">ID</th>
+                            <th lay-data="{field:'id', minWidth:100, sort: true}">ID</th>
+                            <th lay-data="{field:'dtuId', minWidth:100, sort: true}">DTU序列号</th>
+                            <th lay-data="{field:'addTime', minWidth:150, sort: true}">添加/修改时间</th>
+                            <th lay-data="{field:'remark', minWidth:100}">备注</th>
+                            <th lay-data="{field:'address', minWidth:100}">地址</th>
+                            <th lay-data="{minWidth:150,fixed: 'right',templet: '#dtu_operation'}">操作</th>
+                        </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script th:replace="~{common/templet::dtu_operation}"></script>
+<script src="/js/sms/dtu.js"></script>
+</html>

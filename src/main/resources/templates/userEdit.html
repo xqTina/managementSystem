@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html class="x-admin-sm" lang="zh-cn" xmlns:th="http://www.thymeleaf.org">
+<div th:replace="~{common/common.html::head('采集设备编辑-传感器信息管理平台')}"></div>
+<body><div class="layui-form" lay-filter="filter-test-layer" style="margin: 16px;">
+    <div class="demo-login-container">
+        <div class="layui-form-item">
+            <div class="layui-input-wrap">
+                <div class="layui-input-prefix">
+                    <i class="layui-icon layui-icon-username"></i>
+                </div>
+                <input type="text" name="username" value="" lay-verify="required" placeholder="用户名" lay-reqtext="请填写用户名" autocomplete="off" class="layui-input" lay-affix="clear">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-wrap">
+                <div class="layui-input-prefix">
+                    <i class="layui-icon layui-icon-password"></i>
+                </div>
+                <input type="password" name="pwdhash" value="" lay-verify="required" placeholder="密   码" lay-reqtext="请填写密码" autocomplete="off" class="layui-input" lay-affix="eye">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-wrap">
+                <div class="layui-input-prefix">
+                    <i class="layui-icon layui-icon-email"></i>
+                </div>
+                <input type="email" name="email" value="" lay-verify="required" placeholder="邮   箱" lay-reqtext="请填写邮箱" autocomplete="off" class="layui-input" lay-affix="email">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-wrap">
+                <div class="layui-input-prefix">
+                    <i class="layui-icon layui-icon-username"></i>
+                </div>
+                <input type="text" name="name" value="" lay-verify="required" placeholder="真实姓名" lay-reqtext="请填写真实姓名" autocomplete="off" class="layui-input" lay-affix="name">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-wrap">
+                <div class="layui-input-prefix">
+                    <i class="layui-icon layui-icon-cellphone-fine"></i>
+                </div>
+                <input type="tel" name="phone" value="" lay-verify="required|phone" placeholder="电话号码" lay-reqtext="请填写电话号码" autocomplete="off" class="layui-input" lay-affix="phone">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <button lay-submit="" class="layui-btn layui-btn-fluid" lay-filter="user-register">完成</button>
+        </div>
+    </div>
+</div>
+</body>
+<script src="/js/sms/userEdit.js"></script>
+</html>

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html class="x-admin-sm" lang="zh-cn" xmlns:th="http://www.thymeleaf.org">
+<div th:replace="~{common/common.html::head('数据图表生成-网上书店管理后台')}"></div>
+<body onload="xadmin.page_loading()">
+<style>
+    .table_title {
+        color: #777;
+        font-size: 22px;
+        padding-right: 10px;
+    }
+
+    .layui-form-label {
+        width: auto;
+        line-height: 12px;
+    }
+</style>
+<div th:replace="~{common/common.html::x-nav('','数据图表生成')}"></div>
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-body" style="border-bottom: 1px solid #ececec">
+                    <form class="layui-form layui-col-space5">
+                        <div class="layui-inline">
+                            <p class="table_title">数据图表生成</p>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">数据日期</label>
+                            <div class="layui-input-inline">
+                                <input autocomplete="off" class="layui-input" id="date" lay-verify="date" name="date"
+                                       placeholder="请选择日期" type="text">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">DTU</label>
+                            <div class="layui-input-inline">
+                                <select id="dtu" lay-filter="dtu" lay-search="" lay-verify="required" name="dtu">
+                                    <option value="">请搜索选择DTU设备</option>
+                                    <option th:each="dtu:${dtuList}" th:text="${dtu.getDtuId()}"
+                                            th:value="${dtu.getId()}"></option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">采集设备</label>
+                            <div class="layui-input-inline">
+                                <select id="device" lay-filter="device" lay-search="" lay-verify="required"
+                                        name="device">
+                                    <option value="">请搜索选择采集设备</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">通道编号</label>
+                            <div class="layui-input-inline">
+                                <select id="noc" lay-search="" lay-verify="required" name="noc">
+                                    <option value="">请选择通道编号</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <button class="layui-btn" lay-filter="generateChart" lay-submit><i
+                                    class="layui-icon layui-icon-release"></i>生成图表
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                <div class="layui-card-body">
+                    <div id="chart_temperature" style="width: 1080px;height: 480px;display: none;margin: 0 auto"></div>
+                </div>
+                <div class="layui-card-body">
+                    <div id="chart_angle" style="width: 1080px;height: 480px;display: none;margin: 0 auto"></div>
+                </div>
+                <div class="layui-card-body">
+                    <div id="chart_slot_width" style="width: 1080px;height: 480px;display: none;margin: 0 auto"></div>
+                </div>
+                <div class="layui-card-body">
+                    <div id="chart_freqency" style="width: 1080px;height: 480px;display: none;margin: 0 auto"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script crossorigin="anonymous"
+        integrity="sha512-ppWbHq6q2f7HAwS481w6qikuC0XEeBnmkRg6KWnWg3zSIbJwWWBgsCDMAxzSB7SVqXzWwSYQ2s8TSJKjnaikMg=="
+        src="https://lib.baomitu.com/echarts/5.1.2/echarts.min.js"></script>
+<script src="/js/sms/chart.js"></script>
+</body>
+</html>

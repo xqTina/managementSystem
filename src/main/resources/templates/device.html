@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html class="x-admin-sm" lang="zh-cn" xmlns:th="http://www.thymeleaf.org">
+<div th:replace="~{common/common.html::head('采集设备管理-传感器信息管理平台')}"></div>
+<body onload="xadmin.page_loading()">
+<div th:replace="~{common/common.html::x-nav('设备管理','采集设备管理')}"></div>
+<div class="layui-fluid">
+  <div class="layui-row layui-col-space15">
+    <div class="layui-col-md12">
+      <div class="layui-card">
+        <div class="layui-card-body search">
+          <div class="layui-form-item" style="margin-bottom: 0;padding-bottom: 0;padding-top: 10px">
+            <div class="layui-inline">
+              <div class="layui-input-inline">
+                <input autocomplete="off" class="layui-input" id="table_reload" placeholder="请输入搜索关键字"
+                       type="text">
+              </div>
+            </div>
+            <div class="layui-inline">
+              <div class="layui-form">
+              <div class="layui-input-inline" style="width: auto;">
+                <!-- 设备类型选择框 附加得-->
+                <select id="deviceType" lay-filter="deviceType" lay-search="" lay-verify="required" name="deviceType">
+                  <option value="">请搜索选择DTU设备</option>
+                  <option th:each="dev:${deviceTypeList}" th:text="${dev.getRemark()}"
+                          th:value="${dev.getRemark()}"></option>
+                </select>
+              </div>
+                <button class="layui-btn" data-type="reload" id="search"><i
+                        class="layui-icon layui-icon-search"></i>查询
+                </button>
+                <a class="layui-btn btnOption  layui-btn-small btnAdd" href="javascript:" id="add"
+                   onclick="xadmin.open('添加采集设备','/device/edit/show',700,450)"><i
+                        class="layui-icon layui-icon-add-1"></i>添加采集设备</a>
+                <a class="layui-btn btnOption layui-btn-danger layui-btn-small btnBatchDrop"
+                   data-type="deleteCheckData" href="javascript:" id="batchDrop"><i
+                        class="layui-icon layui-icon-delete"></i>批量删除</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="layui-card-body ">
+          <table class="layui-table" id="LAY-device-table"
+                 lay-data="{height: 'full-200', cellMinWidth: 80, page: true, limit:30, url:'/device/table'}">
+            <thead>
+            <tr>
+              <th lay-data="{type:'checkbox', fixed: 'left'}">ID</th>
+              <th lay-data="{field:'id', minWidth:50,sort: true, fixed: 'left'}">ID</th>
+              <th lay-data="{field:'dtuDtuId', minWidth:150, sort: true}">DTU序列号</th>
+              <th lay-data="{field:'deviceId', minWidth:100}">设备序列号</th>
+              <th lay-data="{field:'numberOfChannels', minWidth:100, sort: true}">通道数量</th>
+              <th lay-data="{field:'deviceType', minWidth:100}">设备类型</th>
+              <th lay-data="{field:'addTime', minWidth:150, sort: true}">添加时间</th>
+              <th lay-data="{field:'maxAlarmValue1', minWidth:100}">数据1最大值</th>
+              <th lay-data="{field:'minAlarmValue1', minWidth:100}">数据1最小值</th>
+              <th lay-data="{field:'maxAlarmValue2', minWidth:100}">数据2最大值</th>
+              <th lay-data="{field:'minAlarmValue2', minWidth:100}">数据2最小值</th>
+              <th lay-data="{field:'maxAlarmValue2', minWidth:100}">数据3最大值</th>
+              <th lay-data="{field:'minAlarmValue2', minWidth:100}">数据3最小值</th>
+              <th lay-data="{field:'remark', minWidth:100}">备注</th>
+              <th lay-data="{minWidth:175,fixed: 'right',templet: '#device_operation'}">操作</th>
+            </tr>
+            </thead>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+<script th:replace="~{common/templet::device_operation}"></script>
+<script src="/js/sms/device.js"></script>
+
+</html>

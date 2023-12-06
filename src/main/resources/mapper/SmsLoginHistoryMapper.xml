@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.szkj.sms.mapper.SmsLoginHistoryMapper">
+
+    <resultMap id="BaseResultMap" type="com.szkj.sms.entity.SmsLoginHistory">
+        <id property="id" column="id" jdbcType="INTEGER"/>
+        <result property="loginUsername" column="login_username" jdbcType="VARCHAR"/>
+        <result property="loginUserRole" column="login_user_role" jdbcType="VARCHAR"/>
+        <result property="loginIp" column="login_ip" jdbcType="VARCHAR"/>
+        <result property="loginOs" column="login_os" jdbcType="VARCHAR"/>
+        <result property="loginBrowser" column="login_browser" jdbcType="VARCHAR"/>
+        <result property="loginResult" column="login_result" jdbcType="VARCHAR"/>
+        <result property="loginTime" column="login_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,login_username,login_user_role,
+        login_ip,login_os,login_browser,
+        login_result,login_time
+    </sql>
+</mapper>

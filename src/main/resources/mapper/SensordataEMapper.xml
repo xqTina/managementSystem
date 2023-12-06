@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.szkj.sms.mapper.SensordataEMapper">
+
+    <resultMap id="BaseResultMap" type="com.szkj.sms.entity.SensordataE">
+        <id property="id" column="id" jdbcType="INTEGER"/>
+        <result property="dtuId" column="DTU_id" jdbcType="VARCHAR"/>
+        <result property="deviceId" column="device_id" jdbcType="VARCHAR"/>
+        <result property="channelId" column="channel_id" jdbcType="INTEGER"/>
+        <result property="date" column="date" jdbcType="DATE"/>
+        <result property="time" column="time" jdbcType="TIME"/>
+        <result property="temperature" column="temperature" jdbcType="FLOAT"/>
+        <result property="frequency" column="frequency" jdbcType="FLOAT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,DTU_id,device_id,
+        channel_id,date,time,
+        temperature,frequency
+    </sql>
+</mapper>

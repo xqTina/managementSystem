@@ -1,0 +1,81 @@
+spring:
+  profiles:
+    active: dev
+    # 服务模块
+    devtools:
+      restart:
+        # 热部署开关
+        enabled: true
+    # 是否演示模式：true是,false否
+    app_debug: false
+
+  # 邮件配置
+  mail:
+    host: smtp.exmail.qq.com
+    username: message@sixiwenwu.com
+    password: KhxoFqGgLKTJ4k2Y
+    nickname: 传感器信息数据管理系统
+    default-encoding: UTF-8
+    port: 465
+    auth: true
+    properties:
+      mail:
+        smtp:
+          starttls:
+            enable: true
+            required: true
+          ssl:
+            enable: true
+      imap:
+        ssl:
+          socketFactory:
+            fallback: false
+
+# 短信配置
+tencentsms:
+  # 腾讯云API密钥
+  secretid:
+  secretkey:
+  # 签名模板名
+  signname:
+  # 短信应用ID
+  appid:
+
+# MyBatis
+mybatis-plus:
+  mapper-locations: classpath*:mapper/*Mapper.xml
+  # 实体扫描，多个package用逗号或者分号分隔
+  type-aliases-package: com.szkj.sms.**.mapper
+  configuration:
+    # 开启驼峰命名法
+    map-underscore-to-camel-case: true
+    # 使用生成的keys
+    use-generated-keys: true
+    # 这个配置会将执行的sql打印出来，在开发或测试的时候可以用
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    db-config:
+      logic-delete-field: isDelete  # 全局逻辑删除的实体字段名(since 3.3.0,配置后可以忽略不配置步骤2)
+      logic-delete-value: 1 # 逻辑已删除值(默认为 1)
+      logic-not-delete-value: 0 # 逻辑未删除值(默认为 0)
+
+
+rsa:
+  encrypt:
+    open: false # 是否开启加密 true  or  false
+    showLog: true # 是否打印加解密log true  or  false
+    publicKey: MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAMo+Rc4ES3QhGPNpwJaUbgFwzyLdHB1ShlxBPhEc0gsqhI7zRhj8V/VT12cz5FWkl2iGFBAAnZbavjaGTuE2SXMCAwEAAQ==
+    privateKey: MIIBVgIBADANBgkqhkiG9w0BAQEFAASCAUAwggE8AgEAAkEAyj5FzgRLdCEY82nAlpRuAXDPIt0cHVKGXEE+ERzSCyqEjvNGGPxX9VPXZzPkVaSXaIYUEACdltq+NoZO4TZJcwIDAQABAkEAyIlm/hkUGFqZOwOpi6YyTgtl2NQWhJzHzcKDoMRLIfWKrPJZY+XCx+NjUOA1nxBgCUej7AplP+h5wIgQMGx6QQIhAPMwQ+6h9ZYsyqMec/V2Wrszz2rUeupZwZMSTBKlUQ2XAiEA1OXNqoPbRVaNQdGrpJ/rOQs9jucRRuk2kN6SOTzy1oUCIQDQVmwMNwIfKrZa8k7jXgay09sBKZE3zbcxWP6FBs2edwIgGq4V4RmXIBBhsW7qOL5FxydOdpskgiN10B/kaUHnGNUCIQDDtT7g3fFMM1wpz/iMrf0ZIBzBdqwsiCXIlnjo60XsnQ==
+
+system:
+  # 系统名称
+  systemName: 传感器信息数据管理系统
+  # 系统简称
+  nickName: sms
+  # 系统版本
+  version: 1.0.7-BETA
+
+device:
+  units:
+    - "test"
+    - "niha"

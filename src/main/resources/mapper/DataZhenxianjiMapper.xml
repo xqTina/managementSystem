@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.szkj.sms.mapper.DataZhenxianjiMapper">
+
+    <resultMap id="BaseResultMap" type="com.szkj.sms.entity.DataZhenxianji">
+        <id property="id" column="id" jdbcType="INTEGER"/>
+        <result property="deviceId" column="device_id" jdbcType="INTEGER"/>
+        <result property="channelId" column="channel_id" jdbcType="INTEGER"/>
+        <result property="date" column="date" jdbcType="DATE"/>
+        <result property="time" column="time" jdbcType="TIME"/>
+        <result property="temperature" column="temperature" jdbcType="FLOAT"/>
+        <result property="freqency" column="freqency" jdbcType="FLOAT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,device_id,channel_id,
+        date,time,temperature,
+        freqency
+    </sql>
+</mapper>

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html class="x-admin-sm" lang="zh-cn" xmlns:th="http://www.thymeleaf.org">
+<div th:replace="~{common/common.html::head('数据表格概览-传感器信息管理平台')}"></div>
+<body onload="xadmin.page_loading()">
+<div th:replace="~{common/common.html::x-nav('','数据表格概览')}"></div>
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card" th:if="${!isShow.get('all')}">
+                <div style="padding: 10px;">
+                    <p style="font-size: 16px;font-weight: bold;">未查询到任何数据。</p>
+                    <p>可能的原因：</p>
+                    <p>①用户未绑定任何设备,请前往设备管理-采集设备管理中查看设备。</p>
+                    <p>②用户绑定的设备已被删除。</p>
+                    <p>③用户绑定的设备未定义设备类型。目前支持的设备类型：liefengji(裂缝计)，qingxieji(倾斜计)，zhenxianji(正弦计)</p>
+                </div>
+            </div>
+            <div class="layui-card export" th:if="${isShow.get('all')}">
+                <div class="layui-form-item" style="margin-left: 20px; margin-bottom: 0;padding-bottom: 0;padding-top: 10px">
+
+                    <div class="layui-inline">
+                        <div class="layui-input-inline" style="width: auto;">
+                            <a class="layui-btn layui-btn-small" href="javascript:" id="export"
+                               onclick="exportExcel()"><i class="layui-icon layui-icon-export"></i>导出excel</a>
+                        </div>
+                    </div>
+                </div>
+<!--                ！！！保留！！！！-->
+<!--                <div class="layui-card-body" th:if="${isShow.get('liefengji')}">-->
+<!--                    <table class="layui-table" id="LAY-liefengji-table"></table>-->
+<!--                </div>-->
+<!--                <div class="layui-card-body" th:if="${isShow.get('qingxieji')}">-->
+<!--                    <table class="layui-table" id="LAY-qingxieji-table"></table>-->
+<!--                </div>-->
+                <div class="layui-card-body" th:if="${isShow.get('zhenxianji')}">
+                    <table class="layui-table" id="LAY-zhenxianji-table"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script src="/layui/layui.js"></script>
+<script src="/js/sms/datatable.js"></script>
+<script id="toolbar" type="text/html"><p class="table_title" style="color: #777;font-size: 22px;">
+    {{d.title}}</p></script>
+<script th:replace="~{common/templet::temperature}"></script>
+<script th:replace="~{common/templet::angle}"></script>
+<script th:replace="~{common/templet::freqency}"></script>
+<script th:replace="~{common/templet::slotWidth}"></script>
+<script th:replace="~{common/templet::zhenxianji_operation}"></script>
+</html>

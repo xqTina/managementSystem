@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh-cn" xmlns:th="http://www.thymeleaf.org">
+<!--温度模板格式化-->
+<script id="temperature" th:fragment="temperature" type="text/html">
+    {{d.temperature}} ℃
+    {{#  if(d.minAlarmValue1!=null&&d.minAlarmValue1!=''&&d.temperature < d.minAlarmValue1){ }}
+    <span style="color: blue"> ↓低于标准值 {{d.minAlarmValue1-d.temperature}} ℃</span>
+    {{#  } else if(d.maxAlarmValue1!=null&&d.maxAlarmValue1!=''&&d.temperature > d.maxAlarmValue1) { }}
+    <span style="color: red"> ↑超出标准值 {{d.temperature-d.maxAlarmValue1}} ℃</span>
+    {{#  } }}
+</script>
+<!--裂缝宽度模板格式化-->
+<script id="slotWidth" th:fragment="slotWidth" type="text/html">
+    {{d.slotWidth}} mm
+    {{#  if(d.minAlarmValue2!=null&&d.minAlarmValue2!=''&&d.slotWidth < d.minAlarmValue2){ }}
+    <span style="color: blue"> ↓低于标准值 {{d.minAlarmValue2-d.slotWidth}} 毫米</span>
+    {{#  } else if(d.maxAlarmValue2!=null&&d.maxAlarmValue2!=''&&d.slotWidth > d.maxAlarmValue2) { }}
+    <span style="color: red"> ↑超出标准值 {{d.slotWidth-d.maxAlarmValue2}} 毫米</span>
+    {{#  } }}
+</script>
+<!--倾斜角度模板格式化-->
+<script id="angle" th:fragment="angle" type="text/html">
+    {{d.angle}} °
+    {{#  if(d.minAlarmValue2!=null&&d.minAlarmValue2!=''&&d.angle < d.minAlarmValue2){ }}
+    <span style="color: blue"> ↓低于标准值 {{d.minAlarmValue2-d.angle}} 度</span>
+    {{#  } else if(d.maxAlarmValue2!=null&&d.maxAlarmValue2!=''&&d.angle > d.maxAlarmValue2) { }}
+    <span style="color: red"> ↑超出标准值 {{d.angle-d.maxAlarmValue2}} 度</span>
+    {{#  } }}
+</script>
+<!--频率模板格式化-->
+<script id="freqency" th:fragment="freqency" type="text/html">
+    {{d.freqency}} HZ
+    {{#  if(d.minAlarmValue2!=null&&d.minAlarmValue2!=''&&d.freqency < d.minAlarmValue2){ }}
+    <span style="color: blue"> ↓低于标准值 {{d.minAlarmValue2-d.freqency}} 赫兹</span>
+    {{#  } else if(d.maxAlarmValue2!=null&&d.maxAlarmValue2!=''&&d.freqency > d.maxAlarmValue2) { }}
+    <span style="color: red"> ↑超出标准值 {{d.freqency-d.maxAlarmValue2}} 赫兹</span>
+    {{#  } }}
+</script>
+<!--管理员设备管理页表格操作列模板-->
+<script id="device_operation" th:fragment="device_operation" type="text/html">
+    <button type="button" class="layui-btn layui-btn-normal" style="height: 22px;line-height: 22px;"
+            onclick="xadmin.open('编辑采集设备','/device/edit/show?did='+{{d.id}},700,480)">查看详情
+    </button>
+    <button type="button" class="layui-btn layui-btn-danger" style="height: 22px;line-height: 22px;"
+            onclick="delDevice([{{d.id}}])">删除
+    </button>
+</script>
+<!--管理员DTU管理页表格操作列模板-->
+<script id="dtu_operation" th:fragment="dtu_operation" type="text/html">
+    <button type="button" class="layui-btn" style="height: 22px;line-height: 22px;"
+            onclick="updateDtu({{d.id}})">修改
+    </button>
+    <button type="button" class="layui-btn layui-btn-danger" style="height: 22px;line-height: 22px;"
+            onclick="delDtu([{{d.id}}])">删除
+    </button>
+</script>
+<!--管理员用户管理页表格操作列模板-->
+<script id="user_operation" th:fragment="user_operation" type="text/html">
+    {{# if(d.role=='USER'&&d.expireDate==null){ }}
+    <button type="button" class="layui-btn" onclick='setExpireDate({{d.id}},this)'
+            style="height: 22px;line-height: 22px;">设置过期时间
+    </button>
+    {{# } }}
+    {{# if(d.expireDate!=null){ }}
+    <button type="button" class="layui-btn" onclick='setExpireDate({{d.id}},this)'
+            style="height: 22px;line-height: 22px;">修改过期时间
+    </button>
+    {{# } }}
+</script>
+<!--管理员用户管理页用户启用与停用切换模板-->
+<script id="user_switchTpl" th:fragment="user_switchTpl" type="text/html">
+    {{# if(d.role=='USER'){ }}
+    <input type="checkbox" name="is_use" value="{{d.id}}" lay-skin="switch" lay-text="启用|停用" lay-filter="is_use"
+           {{d.isUse==1?'checked':''}}>
+    {{# } }}
+</script>
+
+<!--将正弦添加二个按钮-->
+
+<script id="zhenxianji_operation" th:fragment="zhenxianji_operation" type="text/html" >
+    <button
+            type="button" class="layui-btn"
+            style="height: 22px;line-height: 22px;"
+            onclick="xadmin.open('添加设备属性','/pro/show?deviceId= ' + {{d.deviceId}}+'&deviceDeviceId='+ {{d.deviceDeviceId}}+ '&status=1',700,600)"
+    >设置传感器操作
+    </button>
+    <button type="button" class="layui-btn"
+            onclick="xadmin.open('添加设备属性','/pro/show?deviceId= '+ {{d.deviceId}}+'&deviceDeviceId='+ {{d.deviceDeviceId}}+'&status=2' ,700,600)"
+            style="height: 22px;line-height: 22px;">查看已设置
+    </button>
+</script>
+
+</html>

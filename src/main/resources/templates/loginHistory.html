@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html class="x-admin-sm" lang="zh-cn" xmlns:th="http://www.thymeleaf.org">
+<div th:replace="~{common/common.html::head('登录日志-传感器信息管理平台')}"></div>
+<body onload="xadmin.page_loading()">
+<div th:replace="~{common/common.html::x-nav('系统管理','登录日志')}"></div>
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-body ">
+                    <table class="layui-table" id="LAY-login-history-table"
+                           lay-data="{height: 'full-110', cellMinWidth: 80, page: true, limit: 30, url:'/loginHistory/table'}">
+                        <thead>
+                        <tr>
+                            <th lay-data="{type:'checkbox',fixed: 'left'}">ID</th>
+                            <th lay-data="{field:'id', minWidth:100, fixed: 'left'}">ID</th>
+                            <th lay-data="{field:'loginUsername', minWidth:100}">登录用户名</th>
+                            <th lay-data="{field:'loginUserRole', minWidth:100, sort: true}">用户权限</th>
+                            <th lay-data="{field:'loginIp', minWidth:100}">IP地址</th>
+                            <th lay-data="{field:'loginOs', minWidth:100}">操作系统</th>
+                            <th lay-data="{field:'loginBrowser', minWidth:100}">浏览器类型</th>
+                            <th lay-data="{field:'loginTime', minWidth:100,sort: true}">登录时间</th>
+                            <th lay-data="{field:'loginResult', minWidth:100,sort: true}">登录结果</th>
+                            <th lay-data="{minWidth:100,fixed: 'right',templet: '<div><button type=\'button\' class=\'layui-btn layui-btn-xs\' style=\'height: 22px;line-height: 22px;\' onclick=\'delLoginHistory({{ d.id }},this)\'>删除</button></div>'}">
+                                操作
+                            </th>
+                        </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script>
+    layui.use('table', function () {
+        var table = layui.table;
+    });
+
+    function delLoginHistory(id,obj) {
+        $.ajax({
+            url: '/loginHistory/' + id,
+            type: 'DELETE',
+            success: function (res) {
+                if (res.code === 0) {
+                    // 操作成功刷新表格
+                    layui.table.reload('LAY-login-history-table');
+                }
+                layer.msg(res.msg);
+            },
+            error: function (error) {
+                layer.msg("Ajax请求失败");
+                console.log(error);
+            }
+        })
+    }
+</script>
+</html>

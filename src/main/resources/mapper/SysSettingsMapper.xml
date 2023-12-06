@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.szkj.sms.mapper.SysSettingsMapper">
+
+    <resultMap id="BaseResultMap" type="com.szkj.sms.entity.SysSettings">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="emailHost" column="email_host" jdbcType="VARCHAR"/>
+            <result property="emailPort" column="email_port" jdbcType="INTEGER"/>
+            <result property="emailUsername" column="email_username" jdbcType="VARCHAR"/>
+            <result property="emailPassword" column="email_password" jdbcType="VARCHAR"/>
+            <result property="emailNickname" column="email_nickname" jdbcType="VARCHAR"/>
+            <result property="isDelete" column="is_delete" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,email_host,email_port,
+        email_username,email_password,email_nickname,
+        is_delete
+    </sql>
+</mapper>

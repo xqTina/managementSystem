@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html class="x-admin-sm" lang="zh-cn" xmlns:th="http://www.thymeleaf.org">
+<div th:replace="~{common/common.html::head('欢迎登录传感器数据管理系统')}"></div>
+<body class="login-bg">
+<div class="login layui-anim layui-anim-up">
+    <div class="message">传感器数据管理系统(不兼容IE浏览器)</div>
+    <div id="darkbannerwrap"></div>
+    <form class="layui-form">
+        <input class="layui-input" id="username" lay-verify="required" name="username" placeholder="管理员用户名/手机号码"
+               type="text">
+        <div class="fenge"></div>
+        <input class="layui-input" id="password" lay-verify="required" name="password" placeholder="管理员账户密码"
+               type="password">
+        <div class="fenge"></div>
+        <input class="layui-input" id="code" lay-verify="required" name="code" placeholder="验证码" style="width: 200px;"
+               type="text">
+        <a href="javascript:;" id="newCode" onclick="getCode()"><img alt="点击刷新验证码" id="code_img" src="/code"
+                                                                     style="width: 125px;height: 48px;border: 1px solid #dcdcdc;border-radius: 2px;float: right;margin-top: -50px;"></a>
+        <div class="fenge"></div>
+        <input id="remember_me" lay-skin="primary" name="remember_me" title="记住我" type="checkbox">
+        <div class="fenge"></div>
+        <input lay-filter="login" lay-submit="" type="button" value="登录"/>
+    </form>
+    <footer style="margin-top: 60px">
+        <div class="layui-row">
+            <div class="layui-col-xs6 layui-col-md12">
+                <div class="grid-demo grid-demo-bg2" style="color: #cccccc;font-size: 16px">备案/许可证编号为：湘ICP备2023026770号</div>
+            </div>
+        </div>
+    </footer>
+</div>
+</body>
+<script src="/js/sms/login.js"></script>
+</html>

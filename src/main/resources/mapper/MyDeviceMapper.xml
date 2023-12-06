@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.szkj.sms.mapper.MyDeviceMapper">
+
+    <resultMap id="BaseResultMap" type="com.szkj.sms.dto.DeviceDto">
+        <id property="id" column="id" jdbcType="INTEGER"/>
+        <result property="dtuDtuId" column="dtu_dtu_id" jdbcType="VARCHAR"/>
+        <result property="deviceId" column="device_id" jdbcType="VARCHAR"/>
+        <result property="numberOfChannels" column="number_of_channels" jdbcType="INTEGER"/>
+        <result property="dtuId" column="dtu_id" jdbcType="INTEGER"/>
+        <result property="deviceType" column="device_type" jdbcType="VARCHAR"/>
+        <result property="maxAlarmValue1" column="max_alarm_value1" jdbcType="FLOAT"/>
+        <result property="minAlarmValue1" column="min_alarm_value1" jdbcType="FLOAT"/>
+        <result property="maxAlarmValue2" column="max_alarm_value2" jdbcType="FLOAT"/>
+        <result property="minAlarmValue2" column="min_alarm_value2" jdbcType="FLOAT"/>
+        <result property="maxAlarmValue3" column="max_alarm_value3" jdbcType="FLOAT"/>
+        <result property="minAlarmValue3" column="min_alarm_value3" jdbcType="FLOAT"/>
+        <result property="addTime" column="add_time" jdbcType="TIMESTAMP"/>
+        <result property="remark" column="remark" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <resultMap id="UserDeviceResultMap" type="com.szkj.sms.dto.UserDeviceDto">
+        <id property="id" column="id" jdbcType="INTEGER"/>
+        <result property="dtuDtuId" column="dtu_dtu_id" jdbcType="VARCHAR"/>
+        <result property="deviceId" column="device_id" jdbcType="INTEGER"/>
+        <result property="deviceDeviceId" column="device_device_id" jdbcType="VARCHAR"/>
+        <result property="numberOfChannels" column="number_of_channels" jdbcType="INTEGER"/>
+        <result property="deviceType" column="device_type" jdbcType="VARCHAR"/>
+        <result property="bindTime" column="bind_time" jdbcType="TIMESTAMP"/>
+        <result property="remark" column="remark" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <resultMap id="DeviceBindUserResultMap" type="com.szkj.sms.dto.DeviceBindUserDto">
+        <id property="id" column="id" jdbcType="INTEGER"/>
+        <result property="userId" column="user_id" jdbcType="INTEGER"/>
+        <result property="deviceId" column="device_id" jdbcType="INTEGER"/>
+        <result property="username" column="username" jdbcType="VARCHAR"/>
+        <result property="bindTime" column="bind_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        device.*,dtu.dtu_id as dtu_dtu_id
+    </sql>
+
+    <sql id="Base_table_List">
+        device,dtu
+    </sql>
+
+    <sql id="UserDevice_Column_List">
+        device_user.id,
+        device.id as device_id,
+        device.device_id as device_device_id,
+        dtu.dtu_id as dtu_dtu_id,
+        device.device_type,
+        device.number_of_channels,
+        device.remark,
+        device_user.bind_time
+    </sql>
+
+    <sql id="UserDevice_table_List">
+        device,dtu,user,device_user
+    </sql>
+
+    <sql id="UserDevice_Link_Conditions">
+        device.dtu_id=dtu.id
+        and
+        device_user.user_id=user.id
+        and
+        device_user.device_id=device.id
+        and
+        device_user.is_delete=0
+        and
+        device.is_delete=0
+        and
+        user.username=#{username}
+    </sql>
+
+    <sql id="Base_Link_Conditions">
+        device.dtu_id=dtu.id
+        and
+        device.is_delete=0
+    </sql>
+
+    <select id="selectList" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        <include refid="Base_table_List"/>
+        where
+        <include refid="Base_Link_Conditions"/>
+        <if test="key!='' and key!=null">
+            <bind name="pattern" value="'%' + key + '%'"/>
+            and CONCAT(dtu.dtu_id,device.device_id,device.id,device.device_type,device.add_time,device.remark) like
+            #{pattern}
+        </if>
+        <if test="deviceType!='' and deviceType!=null">
+            and device.remark = #{deviceType}
+        </if>
+        <if test="orderBy!=null and orderBy!=''">
+            order by
+            device.id
+            ${orderBy}
+        </if>
+        <if test="start!=null and start!='' and limit!=null and limit!=''">
+            limit
+            #{start},#{limit}
+        </if>
+    </select>
+
+    <select id="selectOneById" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        <include refid="Base_table_List"/>
+        where
+        <include refid="Base_Link_Conditions"/>
+        and
+        device.id=#{id}
+    </select>
+
+    <select id="selectCount" resultType="java.lang.Integer">
+        select
+        count(device.id)
+        from
+        <include refid="Base_table_List"/>
+        where
+        <include refid="Base_Link_Conditions"/>
+        <if test="key!='' and key!=null">
+            <bind name="pattern" value="'%' + key + '%'"/>
+            and CONCAT(dtu.dtu_id,device.device_id,device.id,device.device_type,device.add_time,device.remark) like
+            #{pattern}
+        </if>
+    </select>
+
+    <select id="selectListByUsername" resultMap="UserDeviceResultMap">
+        select
+        <include refid="UserDevice_Column_List"/>
+        from
+        <include refid="UserDevice_table_List"/>
+        where
+        <include refid="UserDevice_Link_Conditions"/>
+        <if test="key!=null and key!=''">
+            <bind name="search" value="'%' + key + '%'"/>
+            and
+            CONCAT(dtu.dtu_id,device.device_id,device.id,device.device_type,device.add_time,device.remark,device_user.bind_time)
+            like #{search}
+        </if>
+        <if test="orderBy!=null and orderBy!=''">
+            order by
+            device.id
+            ${orderBy}
+        </if>
+        <if test="start!=null and start!='' and limit!=null and limit!=''">
+            limit
+            #{start},#{limit}
+        </if>
+    </select>
+
+    <select id="selectCountByUsername" resultType="java.lang.Integer">
+        select
+        count(device.id)
+        from
+        <include refid="UserDevice_table_List"/>
+        where
+        <include refid="UserDevice_Link_Conditions"/>
+    </select>
+
+    <select id="selectCountByUsernameAndSearchKey" resultType="java.lang.Integer">
+        select
+        count(device.id)
+        from
+        <include refid="UserDevice_table_List"/>
+        where
+        <include refid="UserDevice_Link_Conditions"/>
+        <bind name="search" value="'%' + key + '%'"/>
+        and
+        CONCAT(dtu.dtu_id,device.device_id,device.id,device.device_type,device.add_time,device.remark,device_user.bind_time)
+        like #{search}
+    </select>
+
+    <select id="selectCountByUsernameAndDeviceType" resultType="java.lang.Integer">
+        select
+        count(device.id)
+        from
+        <include refid="UserDevice_table_List"/>
+        where
+        <include refid="UserDevice_Link_Conditions"/>
+        and
+        device.device_type=#{deviceType}
+    </select>
+
+    <select id="selectDtuListByUsername" resultMap="com.szkj.sms.mapper.DtuMapper.BaseResultMap">
+        select
+        distinct
+        dtu.*
+        from
+        <include refid="UserDevice_table_List"/>
+        where
+        <include refid="UserDevice_Link_Conditions"/>
+    </select>
+
+    <select id="selectDeviceListByUsernameAndDtuId" resultMap="com.szkj.sms.mapper.DeviceMapper.BaseResultMap">
+        select
+        distinct
+        device.*
+        from
+        <include refid="UserDevice_table_List"/>
+        where
+        <include refid="UserDevice_Link_Conditions"/>
+        and
+        device.dtu_id=#{dtuId}
+    </select>
+
+    <select id="selectNumberOfChannelsByUsernameAndDtuIdAndDeviceId" resultType="java.lang.Integer">
+        select
+        device.number_of_channels
+        from
+        <include refid="UserDevice_table_List"/>
+        where
+        <include refid="UserDevice_Link_Conditions"/>
+        and
+        device.dtu_id=#{dtuId}
+        and
+        device.id=#{deviceId}
+    </select>
+
+    <select id="selectDeviceIdByDtuDtuIdAndDeviceDeviceId" resultType="java.lang.Integer">
+        select
+        device.id
+        from
+        device,dtu
+        where
+        device.dtu_id=dtu.id
+        and
+        dtu.dtu_id=#{dtuId}
+        and
+        device.device_id=#{deviceId}
+        and
+        device.is_delete=0
+        limit
+        0,1
+    </select>
+
+    <select id="selectUserListById" resultMap="DeviceBindUserResultMap">
+        select
+        device_user.*,user.username
+        from
+        device_user,user,device
+        where
+        device_user.device_id=device.id
+        and
+        device_user.user_id=user.id
+        and
+        device_user.is_delete=0
+        and
+        device.id=#{id}
+    </select>
+</mapper>

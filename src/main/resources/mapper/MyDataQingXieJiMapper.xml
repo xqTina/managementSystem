@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.szkj.sms.mapper.MyDataQingXieJiMapper">
+
+    <resultMap id="BaseResultMap" type="com.szkj.sms.dto.DataQingXieJiDto">
+        <id property="id" column="id" jdbcType="INTEGER"/>
+        <result property="dtuDtuId" column="dtu_dtu_id" jdbcType="VARCHAR"/>
+        <result property="deviceId" column="device_id" jdbcType="INTEGER"/>
+        <result property="deviceDeviceId" column="device_device_id" jdbcType="VARCHAR"/>
+        <result property="deviceType" column="device_type" jdbcType="VARCHAR"/>
+        <result property="channelId" column="channel_id" jdbcType="INTEGER"/>
+        <result property="date" column="date" jdbcType="DATE"/>
+        <result property="time" column="time" jdbcType="TIME"/>
+        <result property="temperature" column="temperature" jdbcType="FLOAT"/>
+        <result property="angle" column="angle" jdbcType="FLOAT"/>
+        <result property="maxAlarmValue1" column="max_alarm_value1" jdbcType="FLOAT"/>
+        <result property="minAlarmValue1" column="min_alarm_value1" jdbcType="FLOAT"/>
+        <result property="maxAlarmValue2" column="max_alarm_value1" jdbcType="FLOAT"/>
+        <result property="minAlarmValue2" column="min_alarm_value1" jdbcType="FLOAT"/>
+        <result property="maxAlarmValue3" column="max_alarm_value3" jdbcType="FLOAT"/>
+        <result property="minAlarmValue3" column="min_alarm_value3" jdbcType="FLOAT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        dtu.dtu_id as dtu_dtu_id,
+        device.id as device_id,
+        device.device_id as device_device_id,
+        device.device_type,
+        device.max_alarm_value1,device.min_alarm_value1,
+        device.max_alarm_value2,device.min_alarm_value2,
+        device.max_alarm_value3,device.min_alarm_value3,
+        data_qingxieji.*
+    </sql>
+
+    <sql id="Base_Table_List">
+        dtu,device,data_qingxieji
+    </sql>
+
+    <sql id="Base_Link_Conditions">
+        dtu.id=device.dtu_id
+        and
+        device.id=data_qingxieji.device_id
+    </sql>
+
+    <select id="selectListByLimit" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        <include refid="Base_Table_List"/>
+        where
+        <include refid="Base_Link_Conditions"/>
+        limit
+        #{start},#{limit}
+    </select>
+
+    <select id="selectListByLimitOrderBy" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        <include refid="Base_Table_List"/>
+        where
+        <include refid="Base_Link_Conditions"/>
+        order by
+        data_qingxieji.id
+        ${orderBy}
+        limit
+        #{start},#{limit}
+    </select>
+
+    <select id="selectCount" resultType="java.lang.Integer">
+        select
+        count(data_qingxieji.id)
+        from
+        <include refid="Base_Table_List"/>
+        where
+        <include refid="Base_Link_Conditions"/>
+    </select>
+
+    <select id="selectListByUsernameAndLimit" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>,
+        device_user.device_id as device_user_device_id,
+        device_user.user_id as device_user_user_id
+        from
+        <include refid="Base_Table_List"/>,device_user,user
+        where
+        <include refid="Base_Link_Conditions"/>
+        and
+        device_user.device_id=device.id
+        and
+        user.id=device_user.user_id
+        and
+        user.username=#{username}
+        limit
+        #{start},#{limit}
+    </select>
+
+    <select id="selectListByUsernameAndLimitOrderBy" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>,
+        device_user.device_id as device_user_device_id,
+        device_user.user_id as device_user_user_id
+        from
+        <include refid="Base_Table_List"/>,device_user,user
+        where
+        <include refid="Base_Link_Conditions"/>
+        and
+        device_user.device_id=device.id
+        and
+        user.id=device_user.user_id
+        and
+        user.username=#{username}
+        order by
+        data_qingxieji.id
+        ${orderBy}
+        limit
+        #{start},#{limit}
+    </select>
+
+    <select id="selectCountByUsername" resultType="java.lang.Integer">
+        select
+        count(data_qingxieji.id)
+        from
+        <include refid="Base_Table_List"/>,device_user,user
+        where
+        <include refid="Base_Link_Conditions"/>
+        and
+        device_user.device_id=device.id
+        and
+        user.id=device_user.user_id
+        and
+        user.username=#{username}
+    </select>
+</mapper>

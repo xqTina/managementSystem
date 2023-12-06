@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html class="x-admin-sm" lang="zh-cn" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+      xmlns:th="http://www.thymeleaf.org">
+<div th:replace="~{common/common.html::head('欢迎页面-传感器数据管理系统')}"></div>
+<body>
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-body ">
+                    <blockquote class="layui-elem-quote">
+                        尊敬的<span
+                            th:text="${#authentication.getAuthorities().toString().equals('[ROLE_USER]')?'用户':'管理员'}"></span>
+                        ：
+                        <span class="x-red" sec:authentication="name"></span>！
+                        当前时间: <span id="time">正在获取系统时间</span>
+                    </blockquote>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-header">数据统计</div>
+                <div class="layui-card-body ">
+                    <ul class="layui-row layui-col-space10 layui-this x-admin-carousel x-admin-backlog">
+                        <li class="layui-col-md2 layui-col-xs5"
+                            th:if="${#authentication.getAuthorities().toString().equals('[ROLE_ADMIN]')||#authentication.getAuthorities().toString().equals('[ROLE_DEV]')}">
+                            <a class="x-admin-backlog-body" href="javascript:;"
+                               onclick="window.location.href='/dtu/show'">
+                                <h3>DTU设备数量</h3>
+                                <p>
+                                    <cite id="dtuNum">正在获取数据</cite></p>
+                            </a>
+                        </li>
+                        <li class="layui-col-md2 layui-col-xs5">
+                            <a class="x-admin-backlog-body" href="javascript:;"
+                               onclick="window.location.href='/device/show'">
+                                <h3>Device采集设备数量</h3>
+                                <p>
+                                    <cite id="deviceNum">正在获取数据</cite></p>
+                            </a>
+                        </li>
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-header">系统信息</div>
+                <div class="layui-card-body ">
+                    <table class="layui-table">
+                        <tbody>
+                        <tr>
+                            <th>后台名称</th>
+                            <td id="systemName">正在获取信息</td>
+                        </tr>
+                        <tr>
+                            <th>后台版本</th>
+                            <td id="systemVersion">正在获取信息</td>
+                        </tr>
+                        <tr th:if="${#authentication.getAuthorities().toString().equals('[ROLE_USER]')?false:true}">
+                            <th>服务器地址</th>
+                            <td id="systemIp">正在获取信息</td>
+                        </tr>
+                        <tr th:if="${#authentication.getAuthorities().toString().equals('[ROLE_USER]')?false:true}">
+                            <th>操作系统</th>
+                            <td id="osName">正在获取信息</td>
+                        </tr>
+                        <tr th:if="${#authentication.getAuthorities().toString().equals('[ROLE_USER]')?false:true}">
+                            <th>运行环境</th>
+                            <td>Apache Tomcat/9.0.41</td>
+                        </tr>
+                        <tr th:if="${#authentication.getAuthorities().toString().equals('[ROLE_USER]')?false:true}">
+                            <th>MYSQL版本</th>
+                            <td>5.7.32-log</td>
+                        </tr>
+                        <tr th:if="${#authentication.getAuthorities().toString().equals('[ROLE_USER]')?false:true}">
+                            <th>JDK版本</th>
+                            <td>1.8.0_121</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <style id="welcome_style"></style>
+    </div>
+</div>
+</div>
+</body>
+<script src="/js/sms/welcome.js"></script>
+</html>

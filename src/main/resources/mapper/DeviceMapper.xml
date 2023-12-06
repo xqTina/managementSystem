@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.szkj.sms.mapper.DeviceMapper">
+
+    <resultMap id="BaseResultMap" type="com.szkj.sms.entity.Device">
+        <id property="id" column="id" jdbcType="INTEGER"/>
+        <result property="dtuId" column="dtu_id" jdbcType="INTEGER"/>
+        <result property="deviceId" column="device_id" jdbcType="VARCHAR"/>
+        <result property="numberOfChannels" column="number_of_channels" jdbcType="INTEGER"/>
+        <result property="deviceType" column="device_type" jdbcType="VARCHAR"/>
+        <result property="maxAlarmValue1" column="max_alarm_value1" jdbcType="FLOAT"/>
+        <result property="minAlarmValue1" column="min_alarm_value1" jdbcType="FLOAT"/>
+        <result property="maxAlarmValue2" column="max_alarm_value2" jdbcType="FLOAT"/>
+        <result property="minAlarmValue2" column="min_alarm_value2" jdbcType="FLOAT"/>
+        <result property="maxAlarmValue3" column="max_alarm_value3" jdbcType="FLOAT"/>
+        <result property="minAlarmValue3" column="min_alarm_value3" jdbcType="FLOAT"/>
+        <result property="addTime" column="add_time" jdbcType="TIMESTAMP"/>
+        <result property="remark" column="remark" jdbcType="VARCHAR"/>
+        <result property="isDelete" column="is_delete" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,dtu_id,device_id,
+        number_of_channels,device_type,max_alarm_value1,
+        min_alarm_value1,max_alarm_value2,min_alarm_value2,
+        max_alarm_value3,min_alarm_value3,add_time,
+        remark,is_delete
+    </sql>
+</mapper>

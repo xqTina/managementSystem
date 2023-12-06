@@ -1,0 +1,42 @@
+@charset "UTF-8";
+
+.hidden{
+    display: none;
+}
+.loading {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 100;
+    background: rgba(76, 76, 76, 0);
+}
+
+.loading .loading-img {
+    width: 64px;
+    height: 64px;
+    /*background: url("../images/loading.gif");*/
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 220px;
+    right: 0;
+    margin: auto;
+
+}
+@media screen and (max-width: 768px){
+    .loading .loading-img{
+        left: 60px;
+    }
+}
+
+.email-title{
+    font-size: 16px;
+    font-weight: bold;
+    line-height: 21px;
+    margin: 10px 0 20px 10px;
+}
+.email-card-body .layui-form-label{
+    min-width: 100px;
+}

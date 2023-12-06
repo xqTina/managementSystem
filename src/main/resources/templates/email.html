@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html class="x-admin-sm" lang="zh-cn" xmlns:th="http://www.thymeleaf.org">
+<div th:replace="~{common/common.html::head('系统邮件设置-传感器信息管理平台')}"></div>
+<body onload="xadmin.page_loading()">
+<div th:replace="~{common/common.html::x-nav('系统管理','系统邮件设置')}"></div>
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-body email-card-body">
+                    <p class="email-title">配置SMTP系统邮件通知发件人账号。</p>
+                    <form class="layui-form">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">服务提供商：</label>
+                            <div class="layui-input-inline">
+                                <select id="mailHost" required lay-verify="required" name="mailHost">
+                                    <option value="">请选择服务提供商</option>
+                                    <option th:each="host:${hosts}" th:text="${host.getKey()}"
+                                            th:value="${host.getValue()}" th:selected="${email.getMailHost()==host.getValue()?true:false}"></option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">SMTP端口：</label>
+                            <div class="layui-input-inline">
+                                <input class="layui-input" id="mailPort" name="mailPort" th:value="${email.getMailPort()}" type="text" required lay-verify="number" >
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">用户名/账户：</label>
+                            <div class="layui-input-inline">
+                                <input class="layui-input" id="mailUsername" name="mailUsername" th:value="${email.getMailUsername()}" type="text" required lay-verify="email" >
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">SMTP密码：</label>
+                            <div class="layui-input-inline">
+                                <input class="layui-input" id="mailPassword" name="mailPassword" th:value="${email.getMailPassword()}" type="password" required lay-verify="required" >
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">邮件发件人昵称：</label>
+                            <div class="layui-input-inline">
+                                <input class="layui-input" id="mailNickname" name="mailNickname" th:value="${email.getMailNickname()}" type="text">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <div class="layui-form-item">
+                                <button class="layui-btn" lay-filter="editEmail" lay-submit="">保存信息</button>
+                                <button class="layui-btn layui-btn-normal" type="button" onclick="sendTestEmail()">发送测试电子邮件</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script>
+    layui.use('form', function () {
+        var form = layui.form;
+        //监听提交
+        form.on('submit(editEmail)', function (data) {
+            layer.load(1);
+            $.ajax({
+                url: '/message/email/config',
+                type: 'POST',
+                dataType: 'json',
+                contentType: "application/json",
+                data: JSON.stringify(data.field),
+                success: function (res) {
+                    layer.closeAll("loading");
+                    layer.alert(res.msg, function () {
+                        if (res.code === 0) {
+                            // 修改成功，刷新页
+                            xadmin.page_loading(true);
+                            window.location.reload();
+                        }
+                    });
+                },
+                error: function (error) {
+                    layer.closeAll("loading");
+                    layer.msg("Ajax请求失败");
+                    console.log(error)
+                }
+            })
+            return false;
+        });
+    });
+    function sendTestEmail() {
+        layer.prompt({title: '请输入收件人邮箱'},function(val, index){
+            layer.load(1);
+            // 异步请求发送测试邮件
+            $.ajax({
+                url: '/message/email/send/test',
+                type: 'POST',
+                data: {to:val},
+                success: function (res) {
+                    layer.closeAll("loading");
+                    layer.close(index);
+                    layer.alert(res.msg);
+                },
+                error: function (error) {
+                    layer.closeAll("loading");
+                    layer.close(index);
+                    console.log(error);
+                    layer.msg("请求失败");
+                }
+            })
+        });
+    }
+</script>
+</html>

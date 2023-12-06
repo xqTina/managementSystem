@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html class="x-admin-sm" lang="zh-cn" xmlns:th="http://www.thymeleaf.org">
+<div th:replace="~{common/common.html::head('采集设备编辑-传感器信息管理平台')}"></div>
+<body>
+<div class="layui-fluid" id="deviceeditdiv">
+  <div class="layui-row" th:if="${failMsg}==''">
+    <form class="layui-form">
+
+      <form class="layui-form" action="" style="padding: 20px">
+        <div class="layui-form-item">
+          <label class="layui-form-label">当前设备:</label>
+          <div class="layui-input-block">
+            <input type="text" name="device_id" th:value="${deviceId}" lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input" style="width: 200px" readonly="true">
+          </div>
+        </div>
+        <div class="layui-form-item">
+          <label class="layui-form-label">该设备参数:</label>
+          <br/>
+          <div style="display: flex;flex-direction:column; margin-top: 20px">
+            <th:div th:each="dev:${deviceArg}" style="display: flex;justify-content:space-between; margin-bottom: 20px">
+              <div th:text="${#strings.arraySplit(dev,'_')[0]} + ':'" ></div>
+              <span th:switch="${#lists.size(#strings.arraySplit(dev,'_'))==2}">
+                <input type="text" th:case="true" name="device_info" th:value="${#strings.arraySplit(dev,'_')[1]}" lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input" readonly="true" style="width: 100px; margin-right: 200px">
+                <input type="text" th:case="false" name="device_info" th:value="${#strings.arraySplit(dev,'_')[0]}" lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input" readonly="true" style="width: 100px; margin-right: 200px">
+                <span>
+            </th:div>
+
+          </div>
+        </div>
+
+        <div class="layui-form-item">
+          <div class="layui-input-block">
+            <button type="submit" class="layui-btn" th:onclick="submitPro([[${deviceId}]])">立即提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+          </div>
+        </div>
+      </form>
+    </form>
+
+  </div>
+
+  <div th:if="${failMsg} !=''" style="display: flex;justify-content: center;align-content: center">
+    <h1 th:text="${failMsg}"></h1>
+  </div>
+</div>
+</body>
+<script src="/js/sms/datatable.js"></script>
+</html>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.szkj.sms.mapper.DtuMapper">
+
+    <resultMap id="BaseResultMap" type="com.szkj.sms.entity.Dtu">
+        <id property="id" column="id" jdbcType="INTEGER"/>
+        <result property="dtuId" column="dtu_id" jdbcType="VARCHAR"/>
+        <result property="addTime" column="add_time" jdbcType="TIMESTAMP"/>
+        <result property="remark" column="remark" jdbcType="VARCHAR"/>
+        <result property="isDelete" column="is_delete" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        dtu.*
+    </sql>
+
+    <sql id="Base_Table_List">
+        user, device_user, device, dtu
+    </sql>
+
+    <sql id="Base_Link_Conditions">
+        device_user.user_id = user.id
+        and
+        device.id = device_user.device_id
+        and
+        dtu.id=device.dtu_id
+        and
+        dtu.is_delete = 0
+    </sql>
+
+    <select id="getUserDeviceDtu" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from
+        <include refid="Base_Table_List"/>
+        where
+        <include refid="Base_Link_Conditions"/>
+        and
+        user.`name` = #{name}
+    </select>
+
+    <select id="getUserDeviceDtuCount" resultType="java.lang.Integer">
+        select count(dtu.id)
+        from
+        <include refid="Base_Table_List"></include>
+        where
+        <include refid="Base_Link_Conditions"/>
+        and
+        user.`name` = #{name}
+    </select>
+
+
+
+</mapper>

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html class="x-admin-sm" lang="zh-cn" xmlns:th="http://www.thymeleaf.org">
+<div th:replace="~{common/common.html::head('采集设备编辑-传感器信息管理平台')}"></div>
+<body>
+<div class="layui-fluid" id="deviceeditdiv">
+    <div class="layui-row">
+        <form class="layui-form">
+            <div class="layui-form-item" th:if="${device!=null}">
+                <label class="layui-form-label">ID</label>
+                <div class="layui-form-mid layui-word-aux" th:text="${device.getId()}"></div>
+                <input name="id" style="display: none" th:value="${device.getId()}" type="text">
+                <label class="layui-form-label">添加/修改时间</label>
+                <div class="layui-form-mid layui-word-aux" th:text="${device.getAddTime()}"></div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label"><span class="x-red">*</span>DTU序列号</label>
+                <div class="layui-input-inline">
+                    <input autocomplete="off" class="layui-input" id="dtuDtuId" lay-verify="required" name="dtuDtuId"
+                           placeholder="请输入上级DTU设备序列号"
+                           required="" th:value="${device==null?'':device.getDtuDtuId()}" type="text">
+                </div>
+                <label class="layui-form-label"><span class="x-red">*</span>设备序列号</label>
+                <div class="layui-input-inline">
+                    <input autocomplete="off" class="layui-input" id="deviceId" lay-verify="required" name="deviceId"
+                           placeholder="请输入采集设备序列号"
+                           required="" th:value="${device==null?'':device.getDeviceId()}" type="text">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label"><span class="x-red">*</span>通道数量</label>
+                <div class="layui-input-inline">
+                    <input autocomplete="off" class="layui-input" id="numberOfChannels" lay-verify="required"
+                           name="numberOfChannels"
+                           placeholder="请输入该设备通道数量"
+                           required="" th:value="${device==null?'':device.getNumberOfChannels()}"
+                           type="text">
+                </div>
+                <label class="layui-form-label">设备类型</label>
+                <div class="layui-input-inline">
+                    <input autocomplete="off" class="layui-input" id="deviceType"
+                           name="deviceType" th:value="${device==null?'':device.getDeviceType()}" type="text">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">数据1最大值</label>
+                <div class="layui-input-inline">
+                    <input autocomplete="off" class="layui-input" id="maxAlarmValue1"
+                           name="maxAlarmValue1" th:value="${device==null?'':device.getMaxAlarmValue1()}"
+                           type="text">
+                </div>
+                <label class="layui-form-label">数据1最小值</label>
+                <div class="layui-input-inline">
+                    <input autocomplete="off" class="layui-input" id="minAlarmValue1"
+                           name="minAlarmValue1" th:value="${device==null?'':device.getMinAlarmValue1()}"
+                           type="text">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">数据2最大值</label>
+                <div class="layui-input-inline">
+                    <input autocomplete="off" class="layui-input" id="maxAlarmValue2"
+                           name="maxAlarmValue2" th:value="${device==null?'':device.getMaxAlarmValue2()}"
+                           type="text">
+                </div>
+                <label class="layui-form-label">数据2最小值</label>
+                <div class="layui-input-inline">
+                    <input autocomplete="off" class="layui-input" id="minAlarmValue2"
+                           name="minAlarmValue2" th:value="${device==null?'':device.getMinAlarmValue2()}"
+                           type="text">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">数据3最大值</label>
+                <div class="layui-input-inline">
+                    <input autocomplete="off" class="layui-input" id="maxAlarmValue3"
+                           name="maxAlarmValue3" th:value="${device==null?'':device.getMaxAlarmValue3()}"
+                           type="text">
+                </div>
+                <label class="layui-form-label">数据3最小值</label>
+                <div class="layui-input-inline">
+                    <input autocomplete="off" class="layui-input" id="minAlarmValue3"
+                           name="minAlarmValue3" th:value="${device==null?'':device.getMinAlarmValue3()}"
+                           type="text">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">设备备注</label>
+                <div class="layui-input-inline">
+                    <input autocomplete="off" class="layui-input" id="remark"
+                           name="remark" style="width: 500px;" th:value="${device==null?'':device.getRemark()}"
+                           type="text">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">
+                </label>
+                <button class="layui-btn layui-btn-normal" lay-filter="editdevice" lay-submit=""
+                        th:text="${device==null?'添加设备':'保存设备信息'}">button
+                </button>
+            </div>
+        </form>
+        <div class="layui-form-item layui-form-text" th:if="${device!=null}">
+            <label class="layui-form-label" style="width: 90px;padding-right: 0">设备绑定用户：</label>
+            <div class="layui-input-block">
+                <table class="layui-table" lay-even="" lay-skin="nob" style="width: 500px;">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th>用户名</th>
+                        <th>绑定时间</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody class="cost-tbody">
+                    <tr th:each="user,index:${bindUser}">
+                        <td th:text="${index.count}"></td>
+                        <td th:text="${user.getUsername()}"></td>
+                        <td th:text="${user.getBindTime()}"></td>
+                        <td>
+                            <button bindUser="" class="layui-btn layui-btn-danger"
+                                    style="height: 22px;line-height: 22px;"
+                                    th:onclick="removeBind([[${user.Id}]],[[${user.Username}]])" type="button">解除绑定
+                            </button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="layui-form-item" th:if="${bindUser!=null}">
+            <label class="layui-form-label"></label>
+            <button class="layui-btn" th:onclick="bindUser([[${device.id}]])">绑定用户</button>
+        </div>
+    </div>
+</div>
+</body>
+<script src="/js/sms/deviceEdit.js"></script>
+</html>
