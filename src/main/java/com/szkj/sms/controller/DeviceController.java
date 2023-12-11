@@ -190,8 +190,10 @@ public class DeviceController {
         }
         add.setDtuId(dtu.getId());
         add.setDeviceId(device.getDeviceId());
-        add.setNumberOfChannels(device.getNumberOfChannels());
-        add.setDeviceType(device.getDeviceType() == null ? "" : device.getDeviceType());
+//        add.setNumberOfChannels(device.getNumberOfChannels());
+//        add.setDeviceType(device.getDeviceType() == null ? "" : device.getDeviceType());
+        add.setNumberOfChannels(3);
+        add.setDeviceType("zhenxianji");
         add.setAddTime(LocalDateTime.now());
         add.setRemark(device.getRemark());
         add.setMaxAlarmValue1(device.getMaxAlarmValue1());

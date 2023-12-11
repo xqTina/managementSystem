@@ -26,21 +26,21 @@
                            required="" th:value="${device==null?'':device.getDeviceId()}" type="text">
                 </div>
             </div>
-            <div class="layui-form-item">
-                <label class="layui-form-label"><span class="x-red">*</span>通道数量</label>
-                <div class="layui-input-inline">
-                    <input autocomplete="off" class="layui-input" id="numberOfChannels" lay-verify="required"
-                           name="numberOfChannels"
-                           placeholder="请输入该设备通道数量"
-                           required="" th:value="${device==null?'':device.getNumberOfChannels()}"
-                           type="text">
-                </div>
-                <label class="layui-form-label">设备类型</label>
-                <div class="layui-input-inline">
-                    <input autocomplete="off" class="layui-input" id="deviceType"
-                           name="deviceType" th:value="${device==null?'':device.getDeviceType()}" type="text">
-                </div>
-            </div>
+<!--            <div class="layui-form-item">-->
+<!--                <label class="layui-form-label"><span class="x-red">*</span>通道数量</label>-->
+<!--                <div class="layui-input-inline">-->
+<!--                    <input autocomplete="off" class="layui-input" id="numberOfChannels" lay-verify="required"-->
+<!--                           name="numberOfChannels"-->
+<!--                           placeholder="请输入该设备通道数量"-->
+<!--                           required="" th:value="${device==null?'':device.getNumberOfChannels()}"-->
+<!--                           type="text">-->
+<!--                </div>-->
+<!--                <label class="layui-form-label">设备类型</label>-->
+<!--                <div class="layui-input-inline">-->
+<!--                    <input autocomplete="off" class="layui-input" id="deviceType"-->
+<!--                           name="deviceType" th:value="${device==null?'':device.getDeviceType()}" type="text">-->
+<!--                </div>-->
+<!--            </div>-->
             <div class="layui-form-item">
                 <label class="layui-form-label">数据1最大值</label>
                 <div class="layui-input-inline">

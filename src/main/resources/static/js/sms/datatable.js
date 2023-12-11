@@ -62,7 +62,7 @@ function submitPro(deviceId) {
         data14:"",
         data15:"",
     }
-    var listArg = $('input[id^=deviceTypeArg]'); //返回deviceTypeArg开头的id名称的select标签的对象数组，注意是对象
+    var listArg = $('select[id^=deviceTypeArg]'); //返回deviceTypeArg开头的id名称的select标签的对象数组，注意是对象
     var length = listArg.length;	//长度
     var ArgId = new Array(length); //定义id数组
     for(var i=0;i<length;i++){
@@ -236,56 +236,4 @@ function exportExcel(){
             })
         }
     });
-}
-
-
-// 根据设备id去查询所有数据
-function findDataByDevice(deviceId,dtuId,deviceDeviceId){
-    console.log(deviceId)
-    var table = layui.table;
-
-    layer.open({
-        type : 1,
-        area : [ "1000px", '630px' ],
-        title: '设备数据列表',
-        content : '<div style="margin: 10px;"><table id="templateTable"></table></div>',
-        success:function () {
-            table.render({
-                elem: '#templateTable'
-                // ,height: 312
-                ,url: '/pro/data_zhenxianji/data'
-                ,where:{deviceId:deviceId,dtuId:dtuId,deviceDeviceId:deviceDeviceId}
-                ,page: true//开启分页,
-                ,limit: 10
-                ,cols: [[ //表头
-                    {type: 'numbers', title: '序号', width: 70, fixed: 'left' },
-                    {field: 'dtuId', title: 'DTU序列号', minWidth: 160,sort: true},
-                    {field: 'deviceId', title: '设备序列号', minWidth: 100,sort: true},
-                    {field: 'date', title: '日期时间', minWidth: 175, sort: true, templet: '<div>{{d.date}} {{d.time}}</div>'},
-                    {field: 'temperature', title: '数据1', minWidth: 100, sort: true},
-                    {field: 'freqency', title: '数据2', minWidth: 100, sort: true},
-                    {field: 'temperature', title: '数据1', minWidth: 100, sort: true},
-                    {field: 'yingbian', title: '数据3', minWidth: 100, sort: true},
-                    {field: 'data3', title: '数据4', minWidth: 100, sort: true},
-                    {field: 'data4', title: '数据4', minWidth: 100, sort: true},
-                    {field: 'data5', title: '数据5', minWidth: 100, sort: true},
-                    {field: 'data6', title: '数据6', minWidth: 100, sort: true},
-                    {field: 'data7', title: '数据7', minWidth: 100, sort: true},
-                    {field: 'data8', title: '数据8', minWidth: 100, sort: true},
-                    {field: 'data9', title: '数据9', minWidth: 100, sort: true},
-                    {field: 'data10', title: '数据10', minWidth: 100, sort: true},
-                    {field: 'data11', title: '数据11', minWidth: 100, sort: true},
-                    {field: 'data12', title: '数据12', minWidth: 100, sort: true},
-                    {field: 'data13', title: '数据13', minWidth: 100, sort: true},
-                    {field: 'data14', title: '数据14', minWidth: 100, sort: true},
-                    {field: 'data15', title: '数据15', minWidth: 100, sort: true},
-                ]]
-            });
-        },
-        btn: ['确定'],
-        yes: function(index){
-            layer.close(index);
-        }
-    });
-
 }

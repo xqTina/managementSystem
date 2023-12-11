@@ -19,7 +19,7 @@ public class LoginController {
      */
     @ApiOperation(value = "登录页页面路由")
     @GetMapping("/tologin")
-    public String toLogin() {
+    public Object toLogin() {
         return "login";
     }
 
