@@ -41,6 +41,10 @@
 </div>
 </body>
 <script src="/layui/layui.js"></script>
+<script type="text/html" id="ID-table-device-id">
+    <!--将设备ID和网关传入-->
+    <a href="#" onclick="findDataByDevice({{d.deviceId}},{{d.name}},{{d.deviceDeviceId}})" style="color: red">{{d.deviceDeviceId}}</a>
+</script>
 <script src="/js/sms/datatable.js"></script>
 <script id="toolbar" type="text/html"><p class="table_title" style="color: #777;font-size: 22px;">
     {{d.title}}</p></script>
@@ -49,4 +53,5 @@
 <script th:replace="~{common/templet::freqency}"></script>
 <script th:replace="~{common/templet::slotWidth}"></script>
 <script th:replace="~{common/templet::zhenxianji_operation}"></script>
+\
 </html>

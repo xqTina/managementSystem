@@ -43,30 +43,30 @@ public class DataZhenxianji implements Serializable {
     /**
      *
      */
-    private Double temperature;
+    private String temperature;
     /**
      *
      */
-    private Double freqency;
-    private Double yingbian;
-    private Double data3;
-    private Double data4;
-    private Double data5;
-    private Double data6;
-    private Double data7;
-    private Double data8;
-    private Double data9;
-    private Double data10;
-    private Double data11;
-    private Double data12;
-    private Double data13;
-    private Double data14;
-    private Double data15;
+    private String freqency;
+    private String yingbian;
+    private String data3;
+    private String data4;
+    private String data5;
+    private String data6;
+    private String data7;
+    private String data8;
+    private String data9;
+    private String data10;
+    private String data11;
+    private String data12;
+    private String data13;
+    private String data14;
+    private String data15;
 
 
-    // 返回树形表格 该属性作为父节点 2023 11 25
+    // 网关id,根据设备id查询数据时需要
     @TableField(exist = false)
-    private String parentId;
+    private String dtuId;
 
     @Override
     public boolean equals(Object that) {

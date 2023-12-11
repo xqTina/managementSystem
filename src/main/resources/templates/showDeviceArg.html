@@ -21,7 +21,7 @@
               <div th:text="${#strings.arraySplit(dev,'_')[0]} + ':'" ></div>
               <span th:switch="${#lists.size(#strings.arraySplit(dev,'_'))==2}">
                 <input type="text" th:case="true" name="device_info" th:value="${#strings.arraySplit(dev,'_')[1]}" lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input" readonly="true" style="width: 100px; margin-right: 200px">
-                <input type="text" th:case="false" name="device_info" th:value="${#strings.arraySplit(dev,'_')[0]}" lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input" readonly="true" style="width: 100px; margin-right: 200px">
+                <input type="text" th:case="false" name="device_value" th:value="${#strings.arraySplit(dev,'_')[0]}" lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input" style="width: 100px; margin-right: 200px">
                 <span>
             </th:div>
 

@@ -82,14 +82,14 @@ public class UserAddProController {
         // 存储最新一条数据时间
         model.addAttribute("dataTime", dataZhenxianji == null?LocalDateTime.now():dataZhenxianji.getDate().toString() +":"+ dataZhenxianji.getTime().toString());
       // 存储设备参数
-        Map<String,Object> deviceSelArg = new HashMap<>();
+//        Map<String,Object> deviceSelArg = new HashMap<>();
         ArrayList<String> deviceArg = new ArrayList<>();
-        deviceSelArg.put("压力(N/m2)","N/m2");
-        deviceSelArg.put("湿度","N/m3");
-        deviceSelArg.put("温度","N/m4");
-        deviceSelArg.put("频率","N/m5");
-        deviceSelArg.put("气压","N/m6");
-        model.addAttribute("proDeviceArg",deviceSelArg);
+//        deviceSelArg.put("压力(N/m2)","N/m2");
+//        deviceSelArg.put("湿度","N/m3");
+//        deviceSelArg.put("温度","N/m4");
+//        deviceSelArg.put("频率","N/m5");
+//        deviceSelArg.put("气压","N/m6");
+//        model.addAttribute("proDeviceArg",deviceSelArg);
         // 表示更新数据表
         // 判断unit表中是否有
         System.out.println("deviceId = " + deviceId);
@@ -117,18 +117,20 @@ public class UserAddProController {
                             String nameD = declaredField.getName();
                             String valueD = (declaredField.get(dataZhenxianjiUnit)+"");
                             if(nameD == nameF && valueD.length()!=0){
-                                for (String s : deviceSelArg.keySet()) {
-                                   if( deviceSelArg.get(s).equals(valueD)){
+//                                for (String s : deviceSelArg.keySet()) {
+//                                   if( deviceSelArg.get(s).equals(valueD)){
                                        if(status.equals("1")){
-                                           deviceArg.add(valueF + "_" + s + "_" + valueD);
+//                                           deviceArg.add(valueF + "_" + s + "_" + valueD);
+                                           deviceArg.add(valueF + "_" + valueD);
                                        }else if (status.equals("2")){
-                                           deviceArg.add(s + "_" +valueF + valueD);
+//                                           deviceArg.add(s + "_" +valueF + valueD);
+                                           deviceArg.add(valueF + "_"+valueF + valueD);
                                        }
                                        flag = false;
                                        break;
                                    }
-                                }
-                                }
+//                                }
+//                                }
                         }
 
                         if(flag == true){
@@ -170,9 +172,7 @@ public class UserAddProController {
             }
         }
 
-        for (String s : deviceArg) {
-            System.out.println("s = " + s);
-        }
+
         model.addAttribute("deviceArg",deviceArg);
         model.addAttribute("failMsgs", "success");
         if(status.equals("1")){
@@ -353,5 +353,57 @@ public class UserAddProController {
     }
 
 
+
+
+    // 根据设备id查询当前所有正弦数据
+    @ResponseBody
+    @ApiOperation(value = "根据设备id查询当前所有正弦数据")
+    @GetMapping("/data_zhenxianji/data")
+    public JsonResult findDataByDeviceID(Model model,@RequestParam(defaultValue = "1", value = "page") Integer page,
+                                 @RequestParam(defaultValue = "10", value = "limit") Integer limit,
+                                 @RequestParam(defaultValue = "0", value = "deviceId") Integer deviceId,
+                                 @RequestParam(defaultValue = "0", value = "dtuId") String dtuId,
+                                         @RequestParam(defaultValue = "0", value = "deviceDeviceId") String deviceDeviceId){
+        System.out.println("dtuId = " + dtuId);
+        Page<DataZhenxianji> zhenxianjiPage = new Page<>(page, limit);
+        QueryWrapper<DataZhenxianji> dataZhenxianjiQueryWrapper = new QueryWrapper<DataZhenxianji>()
+                .eq("device_id",deviceId)
+                .orderByDesc("date","time");
+        Page<DataZhenxianji> pages = dataZhenxianjiService.page(zhenxianjiPage,dataZhenxianjiQueryWrapper);
+        // 查询用户是否添加了数据参数
+        QueryWrapper<DataZhenxianjiUnit> dataZhenxianjiUnitQueryWrapper = new QueryWrapper<DataZhenxianjiUnit>()
+                .eq("zhenxian_device_id",deviceId);
+        List<DataZhenxianjiUnit> dataZhenxianjiUnits = dataZhenxianjiUnitService.list(dataZhenxianjiUnitQueryWrapper);
+        if (dataZhenxianjiUnits.size()!=0){
+            // 该用户设置了参数 拼接
+            DataZhenxianjiUnit dataZhenxianjiUnit = dataZhenxianjiUnits.get(0);
+            for (DataZhenxianji dataZhenxianji : pages.getRecords()) {
+                // 直接拼接单位
+                dataZhenxianji.setTemperature(dataZhenxianji.getTemperature() + dataZhenxianjiUnit.getTemperature());
+                dataZhenxianji.setFreqency(dataZhenxianji.getFreqency()+ dataZhenxianjiUnit.getFreqency());
+                dataZhenxianji.setYingbian(dataZhenxianji.getYingbian() + dataZhenxianjiUnit.getYingbian());
+                dataZhenxianji.setData3(dataZhenxianji.getData3() + dataZhenxianjiUnit.getData3());
+                dataZhenxianji.setData4(dataZhenxianji.getData4() + dataZhenxianjiUnit.getData4());
+                dataZhenxianji.setData5(dataZhenxianji.getData5() + dataZhenxianjiUnit.getData5());
+                dataZhenxianji.setData6(dataZhenxianji.getData6() + dataZhenxianjiUnit.getData6());
+                dataZhenxianji.setData7(dataZhenxianji.getData7() + dataZhenxianjiUnit.getData7());
+                dataZhenxianji.setData8(dataZhenxianji.getData8() + dataZhenxianjiUnit.getData8());
+                dataZhenxianji.setData9(dataZhenxianji.getData9() + dataZhenxianjiUnit.getData9());
+                dataZhenxianji.setData10(dataZhenxianji.getData10() + dataZhenxianjiUnit.getData10());
+                dataZhenxianji.setData11(dataZhenxianji.getData11() + dataZhenxianjiUnit.getData11());
+                dataZhenxianji.setData12(dataZhenxianji.getData11() + dataZhenxianjiUnit.getData11());
+                dataZhenxianji.setData13(dataZhenxianji.getData13() + dataZhenxianjiUnit.getData13());
+                dataZhenxianji.setData14(dataZhenxianji.getData14() + dataZhenxianjiUnit.getData14());
+                dataZhenxianji.setData15(dataZhenxianji.getData15() + dataZhenxianjiUnit.getData15());
+                // 设备设备序列号
+                dataZhenxianji.setDeviceId(Integer.valueOf(deviceDeviceId));
+                dataZhenxianji.setDtuId(dtuId);
+
+            }
+
+        }
+
+        return new JsonResult(0, "success",pages.getRecords(),pages.getTotal());
+    }
 
 }

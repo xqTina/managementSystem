@@ -27,20 +27,23 @@
                     <br/>
                     <div class="layui-input-block">
                         <th:div style="display: flex;justify-content: space-between;margin-bottom:15px" th:each="dev:${deviceArg}" >
-                                <input type="text" name="device_info" th:value="${#strings.arraySplit(dev,'_')[0]!=''?#strings.arraySplit(dev,'_')[0]:dev}" lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input" readonly="true" style="width: 100px">
-                                <select th:id="${'deviceTypeArg' + devStat.index + 1}" lay-filter="deviceType" lay-search="" lay-verify="required" name="deviceType">
 
-                                    <div th:switch="${#lists.size(#strings.arraySplit(dev,'_'))==3}">
-                                        <option th:case="true" th:value="${#strings.arraySplit(dev,'_')[2]}" th:text="${#strings.arraySplit(dev,'_')[1]}"></option>
-                                        <option th:case="false" value="">请选择设备参数</option>
+                            <input type="text" name="device_info" th:value="${#strings.arraySplit(dev,'_')[0]!=''?#strings.arraySplit(dev,'_')[0]:dev}" lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input" readonly="true" style="width: 100px">
+                            <input type="text" th:id="${'deviceTypeArg' + devStat.index + 1}"  th:value="${#lists.size(#strings.arraySplit(dev,'_'))==2?#strings.arraySplit(dev,'_')[1]:#strings.arraySplit(dev,'_')[0]}" lay-verify="required" placeholder="请输入参数值" autocomplete="off" class="layui-input"  style="width: 100px">
 
-                                        <span th:case="*">无此布尔值</span>
-                                    <div>
-                                    <option th:each="pro:${proDeviceArg.keySet()}"
-                                            th:text="${pro}"
-                                            th:value="${proDeviceArg.get(pro)}">
-                                    </option>
-                                </select>
+               <!--                                <select th:id="${'deviceTypeArg' + devStat.index + 1}" lay-filter="deviceType" lay-search="" lay-verify="required" name="deviceType">-->
+
+<!--                                    <div th:switch="${#lists.size(#strings.arraySplit(dev,'_'))==3}">-->
+<!--                                        <option th:case="true" th:value="${#strings.arraySplit(dev,'_')[2]}" th:text="${#strings.arraySplit(dev,'_')[1]}"></option>-->
+<!--                                        <option th:case="false" value="">请选择设备参数</option>-->
+
+<!--                                        <span th:case="*">无此布尔值</span>-->
+<!--                                    <div>-->
+<!--                                    <option th:each="pro:${proDeviceArg.keySet()}"-->
+<!--                                            th:text="${pro}"-->
+<!--                                            th:value="${proDeviceArg.get(pro)}">-->
+<!--                                    </option>-->
+<!--                                </select>-->
                         </th:div>
 
 
