@@ -27,7 +27,10 @@ layui.use(['form', 'laydate', 'util','table','treeTable'], function () {
                     // 异步请求绑定
                     $.ajax({
                         url: `http://39.107.228.114:19937/online?DTU_online=${d.name}`,
-                        type: 'POST',
+                        type: 'GET',
+                        // header:{
+                        //     "Access-Control-Allow-Origin": "*"
+                        // },
                         contentType: "application/json",
                         success: function (res) {
                             console.log(res)

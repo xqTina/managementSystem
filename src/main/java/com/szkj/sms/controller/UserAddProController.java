@@ -120,11 +120,9 @@ public class UserAddProController {
 //                                for (String s : deviceSelArg.keySet()) {
 //                                   if( deviceSelArg.get(s).equals(valueD)){
                                        if(status.equals("1")){
-//                                           deviceArg.add(valueF + "_" + s + "_" + valueD);
                                            deviceArg.add(valueF + "_" + valueD);
                                        }else if (status.equals("2")){
-//                                           deviceArg.add(s + "_" +valueF + valueD);
-                                           deviceArg.add(valueF + "_"+valueF + valueD);
+                                           deviceArg.add(valueD+ "_"+valueF + valueD);
                                        }
                                        flag = false;
                                        break;
@@ -134,6 +132,10 @@ public class UserAddProController {
                         }
 
                         if(flag == true){
+                            if(status.equals("2")){
+                                deviceArg.add("暂无参数值_"+valueF);
+                                continue;
+                            }
                             deviceArg.add(valueF);
                         }
 
@@ -377,37 +379,36 @@ public class UserAddProController {
         QueryWrapper<DataZhenxianjiUnit> dataZhenxianjiUnitQueryWrapper = new QueryWrapper<DataZhenxianjiUnit>()
                 .eq("zhenxian_device_id",deviceId);
         List<DataZhenxianjiUnit> dataZhenxianjiUnits = dataZhenxianjiUnitService.list(dataZhenxianjiUnitQueryWrapper);
-//        if (dataZhenxianjiUnits.size()!=0){
+
             // 该用户设置了参数 拼接
-            DataZhenxianjiUnit dataZhenxianjiUnit = dataZhenxianjiUnits.get(0);
             for (DataZhenxianji dataZhenxianji : pages.getRecords()) {
-                if(dataZhenxianjiUnits.size() !=0){
+                if (dataZhenxianjiUnits.size() != 0) {
+                    DataZhenxianjiUnit dataZhenxianjiUnit = dataZhenxianjiUnits.get(0);
                     // 直接拼接单位
-                    dataZhenxianji.setTemperature(!dataZhenxianji.getTemperature().equals("0.0")?dataZhenxianji.getTemperature() + dataZhenxianjiUnit.getTemperature() : dataZhenxianji.getTemperature());
-                    dataZhenxianji.setFreqency(!dataZhenxianji.getFreqency().equals("0.0")?dataZhenxianji.getFreqency()+ dataZhenxianjiUnit.getFreqency():dataZhenxianji.getFreqency());
-                    dataZhenxianji.setYingbian(!dataZhenxianji.getYingbian().equals("0.0")?dataZhenxianji.getYingbian() + dataZhenxianjiUnit.getYingbian():dataZhenxianji.getYingbian());
-                    dataZhenxianji.setData3(!dataZhenxianji.getData3().equals("0.0")?dataZhenxianji.getData3() + dataZhenxianjiUnit.getData3():dataZhenxianji.getData3());
-                    dataZhenxianji.setData4(!dataZhenxianji.getData4().equals("0.0")?dataZhenxianji.getData4() + dataZhenxianjiUnit.getData4():dataZhenxianji.getData4());
-                    dataZhenxianji.setData5(!dataZhenxianji.getData5().equals("0.0")?dataZhenxianji.getData5() + dataZhenxianjiUnit.getData5():dataZhenxianji.getData5());
-                    dataZhenxianji.setData6(!dataZhenxianji.getData6().equals("0.0")?dataZhenxianji.getData6() + dataZhenxianjiUnit.getData6():dataZhenxianji.getData6());
-                    dataZhenxianji.setData7(!dataZhenxianji.getData7().equals("0.0")?dataZhenxianji.getData7() + dataZhenxianjiUnit.getData7():dataZhenxianji.getData6());
-                    dataZhenxianji.setData8(!dataZhenxianji.getData8().equals("0.0")?dataZhenxianji.getData8() + dataZhenxianjiUnit.getData8():dataZhenxianji.getData8() );
-                    dataZhenxianji.setData9(!dataZhenxianji.getData9().equals("0.0")?dataZhenxianji.getData9() + dataZhenxianjiUnit.getData9():dataZhenxianji.getData9() );
-                    dataZhenxianji.setData10(!dataZhenxianji.getData10().equals("0.0")?dataZhenxianji.getData10() + dataZhenxianjiUnit.getData10():dataZhenxianji.getData10());
-                    dataZhenxianji.setData11(!dataZhenxianji.getData11().equals("0.0")?dataZhenxianji.getData11() + dataZhenxianjiUnit.getData11():dataZhenxianji.getData11());
-                    dataZhenxianji.setData12(!dataZhenxianji.getData12().equals("0.0")?dataZhenxianji.getData11() + dataZhenxianjiUnit.getData11():dataZhenxianji.getData12());
-                    dataZhenxianji.setData13(!dataZhenxianji.getData13().equals("0.0")?dataZhenxianji.getData13() + dataZhenxianjiUnit.getData13():dataZhenxianji.getData13());
-                    dataZhenxianji.setData14(!dataZhenxianji.getData14().equals("0.0")?dataZhenxianji.getData14() + dataZhenxianjiUnit.getData14():dataZhenxianji.getData14());
-                    dataZhenxianji.setData15(!dataZhenxianji.getData15().equals("0.0")?dataZhenxianji.getData15() + dataZhenxianjiUnit.getData15():dataZhenxianji.getData15());
+                    dataZhenxianji.setTemperature(!dataZhenxianji.getTemperature().equals("0.0") ? dataZhenxianji.getTemperature() + dataZhenxianjiUnit.getTemperature() : dataZhenxianji.getTemperature());
+                    dataZhenxianji.setFreqency(!dataZhenxianji.getFreqency().equals("0.0") ? dataZhenxianji.getFreqency() + dataZhenxianjiUnit.getFreqency() : dataZhenxianji.getFreqency());
+                    dataZhenxianji.setYingbian(!dataZhenxianji.getYingbian().equals("0.0") ? dataZhenxianji.getYingbian() + dataZhenxianjiUnit.getYingbian() : dataZhenxianji.getYingbian());
+                    dataZhenxianji.setData3(!dataZhenxianji.getData3().equals("0.0") ? dataZhenxianji.getData3() + dataZhenxianjiUnit.getData3() : dataZhenxianji.getData3());
+                    dataZhenxianji.setData4(!dataZhenxianji.getData4().equals("0.0") ? dataZhenxianji.getData4() + dataZhenxianjiUnit.getData4() : dataZhenxianji.getData4());
+                    dataZhenxianji.setData5(!dataZhenxianji.getData5().equals("0.0") ? dataZhenxianji.getData5() + dataZhenxianjiUnit.getData5() : dataZhenxianji.getData5());
+                    dataZhenxianji.setData6(!dataZhenxianji.getData6().equals("0.0") ? dataZhenxianji.getData6() + dataZhenxianjiUnit.getData6() : dataZhenxianji.getData6());
+                    dataZhenxianji.setData7(!dataZhenxianji.getData7().equals("0.0") ? dataZhenxianji.getData7() + dataZhenxianjiUnit.getData7() : dataZhenxianji.getData6());
+                    dataZhenxianji.setData8(!dataZhenxianji.getData8().equals("0.0") ? dataZhenxianji.getData8() + dataZhenxianjiUnit.getData8() : dataZhenxianji.getData8());
+                    dataZhenxianji.setData9(!dataZhenxianji.getData9().equals("0.0") ? dataZhenxianji.getData9() + dataZhenxianjiUnit.getData9() : dataZhenxianji.getData9());
+                    dataZhenxianji.setData10(!dataZhenxianji.getData10().equals("0.0") ? dataZhenxianji.getData10() + dataZhenxianjiUnit.getData10() : dataZhenxianji.getData10());
+                    dataZhenxianji.setData11(!dataZhenxianji.getData11().equals("0.0") ? dataZhenxianji.getData11() + dataZhenxianjiUnit.getData11() : dataZhenxianji.getData11());
+                    dataZhenxianji.setData12(!dataZhenxianji.getData12().equals("0.0") ? dataZhenxianji.getData11() + dataZhenxianjiUnit.getData11() : dataZhenxianji.getData12());
+                    dataZhenxianji.setData13(!dataZhenxianji.getData13().equals("0.0") ? dataZhenxianji.getData13() + dataZhenxianjiUnit.getData13() : dataZhenxianji.getData13());
+                    dataZhenxianji.setData14(!dataZhenxianji.getData14().equals("0.0") ? dataZhenxianji.getData14() + dataZhenxianjiUnit.getData14() : dataZhenxianji.getData14());
+                    dataZhenxianji.setData15(!dataZhenxianji.getData15().equals("0.0") ? dataZhenxianji.getData15() + dataZhenxianjiUnit.getData15() : dataZhenxianji.getData15());
                 }
 
                 // 设备设备序列号
                 dataZhenxianji.setDeviceId(Integer.valueOf(deviceDeviceId));
                 dataZhenxianji.setDtuId(dtuId);
-
+                System.out.println("=================================5555");
             }
 
-//        }
 
         return new JsonResult(0, "success",pages.getRecords(),pages.getTotal());
     }
