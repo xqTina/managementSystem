@@ -3,7 +3,6 @@ package com.szkj.sms.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.szkj.sms.constant.DeviceUnitConstant;
 import com.szkj.sms.entity.User;
 import com.szkj.sms.service.impl.UserServiceImpl;
 import com.szkj.sms.util.JsonResult;
@@ -19,6 +18,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 import java.text.SimpleDateFormat;
 
@@ -186,5 +186,6 @@ public class UserController {
     public String password() {
         return "password";
     }
+
 
 }

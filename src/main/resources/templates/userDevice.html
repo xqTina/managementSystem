@@ -29,7 +29,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="layui-card-body ">
+                <div class="layui-card-body">
                     <table class="layui-table" id="LAY-userDevice-table"
                            lay-data="{height: 'full-200', cellMinWidth: 80, page: true, limit:30, url:'/device/table'}">
                         <thead>
@@ -39,8 +39,8 @@
                             <th lay-data="{field:'dtuDtuId', minWidth:150, sort: true}">DTU序列号</th>
                             <th lay-data="{field:'deviceId', minWidth:100}">设备ID</th>
                             <th lay-data="{field:'deviceDeviceId', minWidth:100}">设备序列号</th>
-                            <th lay-data="{field:'numberOfChannels', minWidth:100}">通道数量</th>
-                            <th lay-data="{field:'deviceType', minWidth:100}">设备类型</th>
+<!--                            <th lay-data="{field:'numberOfChannels', minWidth:100}">通道数量</th>-->
+<!--                            <th lay-data="{field:'deviceType', minWidth:100}">设备类型</th>-->
                             <th lay-data="{field:'bindTime', minWidth:150}">绑定时间</th>
                             <th lay-data="{field:'remark', minWidth:100}">设备系统备注</th>
                             <th lay-data="{minWidth:100,fixed: 'right',templet: '<div><button type='button' class='layui-btn layui-btn-danger' style='height: 22px;line-height: 22px;' onclick='removeBind([{{d.id}}])'>解除绑定</button></div>'}">

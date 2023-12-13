@@ -94,7 +94,7 @@ layui.use(['form', 'layedit', 'laydate'], function () {
             data: {
                 date: data.field.date,
                 deviceId: data.field.device,
-                noc: data.field.noc
+                // noc: data.field.noc
             },
             success: function (res) {
                 layer.closeAll('loading');
@@ -186,37 +186,37 @@ layui.use(['form', 'layedit', 'laydate'], function () {
     })
 
     // 监听dtu选择
-    form.on("select(device)", function (data) {
-        if (data.value !== '') {
-            layer.load(1);
-            var dtuId = $("#dtu").val();
-            // 异步请求device列表
-            $.ajax({
-                url: '/chart/getUDNOC',
-                type: 'GET',
-                data: {dtuId: dtuId, deviceId: data.value},
-                success: function (res) {
-                    layer.closeAll('loading');
-                    if (res.code == 0) {
-                        $("#noc").empty().append("<option value=''>请选择通道编号</option>")
-                        if (res.data > 0) {
-                            for (var i = 0; i < res.data; i++) {
-                                $("#noc").append("<option value='" + i + "'>" + i + "</option>")
-                            }
-                        } else {
-                            layer.msg("通道编号存在异常-通道数量不为正整数");
-                        }
-                        form.render('select');
-                    } else {
-                        layer.msg(res.msg);
-                    }
-                },
-                error: function (error) {
-                    layer.closeAll('loading');
-                    layer.alert("无法获取到通道编号，请稍后重试", error);
-                }
-            })
-        }
-    })
+    // form.on("select(device)", function (data) {
+    //     if (data.value !== '') {
+    //         layer.load(1);
+    //         var dtuId = $("#dtu").val();
+    //         // 异步请求device列表
+    //         $.ajax({
+    //             url: '/chart/getUDNOC',
+    //             type: 'GET',
+    //             data: {dtuId: dtuId, deviceId: data.value},
+    //             success: function (res) {
+    //                 layer.closeAll('loading');
+    //                 if (res.code == 0) {
+    //                     $("#noc").empty().append("<option value=''>请选择通道编号</option>")
+    //                     if (res.data > 0) {
+    //                         for (var i = 0; i < res.data; i++) {
+    //                             $("#noc").append("<option value='" + i + "'>" + i + "</option>")
+    //                         }
+    //                     } else {
+    //                         layer.msg("通道编号存在异常-通道数量不为正整数");
+    //                     }
+    //                     form.render('select');
+    //                 } else {
+    //                     layer.msg(res.msg);
+    //                 }
+    //             },
+    //             error: function (error) {
+    //                 layer.closeAll('loading');
+    //                 layer.alert("无法获取到通道编号，请稍后重试", error);
+    //             }
+    //         })
+    //     }
+    // })
 
 });

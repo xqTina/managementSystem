@@ -179,9 +179,19 @@ public class DeviceController {
             return new JsonResult(-1, "参数错误");
         }
         // DTU校验
-        Dtu dtu = dtuService.getOne(new QueryWrapper<Dtu>().eq("dtu_id", device.getDtuDtuId()));
+        Dtu dtu = dtuService.getOne(new QueryWrapper<Dtu>().eq("dtu_id", device.getDtuDtuId()).eq("is_delete",0));
         if (dtu == null) {
             return new JsonResult(-1, "DTU不存在");
+        }
+        if(Integer.parseInt(device.getDeviceId())<0||Integer.parseInt(device.getDeviceId())>255){
+            return new JsonResult(-1, "设备序列号需在0-255之间");
+        }
+        //查询同一个网关下是否有同一个设备序列号
+        QueryWrapper<Device> wrapper = new QueryWrapper<>();
+        wrapper.eq("dtu_id",dtu.getId()).eq("device_id",device.getDeviceId());
+        Device one = deviceService.getOne(wrapper);
+        if (one!=null){
+            return new JsonResult(-1, "该DTU下已有该序列号的设备");
         }
         // 构建device
         Device add = new Device();
@@ -190,10 +200,12 @@ public class DeviceController {
         }
         add.setDtuId(dtu.getId());
         add.setDeviceId(device.getDeviceId());
+        //修改为默认值
 //        add.setNumberOfChannels(device.getNumberOfChannels());
 //        add.setDeviceType(device.getDeviceType() == null ? "" : device.getDeviceType());
         add.setNumberOfChannels(3);
         add.setDeviceType("zhenxianji");
+
         add.setAddTime(LocalDateTime.now());
         add.setRemark(device.getRemark());
         add.setMaxAlarmValue1(device.getMaxAlarmValue1());

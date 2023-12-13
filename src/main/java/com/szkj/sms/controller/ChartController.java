@@ -93,8 +93,9 @@ public class ChartController {
     @ApiOperation(value = "获取图表数据", notes = "根据选择获取数据返回前台生成图表")
     @ResponseBody
     @GetMapping("/getData")
-    public JsonResult getData(String date, Integer deviceId, Integer noc) {
-        if (date.length() != 10 || deviceId <= 0 || noc < 0) {
+    public JsonResult getData(String date, Integer deviceId) {
+        //, Integer noc  || noc < 0
+        if (date.length() != 10 || deviceId <= 0 ) {
             return new JsonResult(-1, "参数错误");
         }
         // 先查询设备类型
@@ -105,11 +106,11 @@ public class ChartController {
         // 根据类型不同返回不同的数据
         switch (device.getDeviceType()) {
             case "liefengji":
-                return new JsonResult(0, "liefengji", dataLiefengjiService.list(new QueryWrapper<DataLiefengji>().eq("device_id", deviceId).eq("channel_id", noc).eq("date", date)));
+                return new JsonResult(0, "liefengji", dataLiefengjiService.list(new QueryWrapper<DataLiefengji>().eq("device_id", deviceId).eq("date", date)));
             case "qingxieji":
-                return new JsonResult(0, "qingxieji", dataQingxiejiService.list(new QueryWrapper<DataQingxieji>().eq("device_id", deviceId).eq("channel_id", noc).eq("date", date)));
+                return new JsonResult(0, "qingxieji", dataQingxiejiService.list(new QueryWrapper<DataQingxieji>().eq("device_id", deviceId).eq("date", date)));
             case "zhenxianji":
-                return new JsonResult(0, "zhenxianji", dataZhenxianjiService.list(new QueryWrapper<DataZhenxianji>().eq("device_id", deviceId).eq("channel_id", noc).eq("date", date)));
+                return new JsonResult(0, "zhenxianji", dataZhenxianjiService.list(new QueryWrapper<DataZhenxianji>().eq("device_id", deviceId).eq("date", date)));
             default:
                 return new JsonResult(-1, "此设备未定义设备类型，无法获取数据，请在设备管理中定义设备类型");
         }
