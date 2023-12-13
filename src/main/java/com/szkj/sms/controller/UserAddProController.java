@@ -1,6 +1,8 @@
 package com.szkj.sms.controller;
 
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.szkj.sms.dto.DataZhenXianJiNewDto;
@@ -18,6 +20,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 import java.lang.reflect.Field;
 import java.time.LocalDate;
@@ -229,6 +232,8 @@ public class UserAddProController {
     @GetMapping("/data_zhenxianji/table")
     public JsonResult findProNew(Model model,@RequestParam(defaultValue = "1", value = "page") Integer page,
                               @RequestParam(defaultValue = "10", value = "limit") Integer limit) {
+
+
         Page<Dtu> dtuPage = new Page<>(page, limit);
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         // 查询没有删除的设备
@@ -248,10 +253,20 @@ public class UserAddProController {
         if ( auth.getAuthorities().toString().equals(RoleVo.ADMIN) || auth.getAuthorities().toString().equals(RoleVo.DEV)) {
             pages = dtuService.page(dtuPage,dtuQueryWrapper);
             for (Dtu dtu : pages.getRecords()) {
+                String url = "http://39.107.228.114:19937/online?DTU_online=" + dtu.getDtuId();
+                //         请求客户端
+                RestTemplate client = new RestTemplate();
+                //      发起请求
+                String body = client.getForEntity(url, String.class).getBody();
+                System.out.println("******** Get请求 *********");
+                assert body != null;
+                JSONObject jsonObject =  JSON.parseObject(body);
+
+                System.out.println("jsonObject.get(\"status\") = " + jsonObject.get("status"));
                 DataZhenXianJiNewDto xianJiNewDto = new DataZhenXianJiNewDto();
                 xianJiNewDto.setId(i++);
                 xianJiNewDto.setAddress(dtu.getAddress());
-                xianJiNewDto.setIsOnline(dtu.getIsOnline());
+                xianJiNewDto.setIsOnline((String) jsonObject.get("status"));
                 xianJiNewDto.setName(dtu.getDtuId());
                 xianJiNewDto.setDeviceId(0);
                 xianJiNewDto.setZhenXianId(0);
@@ -268,7 +283,7 @@ public class UserAddProController {
                     DataZhenXianJiNewDto dataZhenXianJiNewDto = new DataZhenXianJiNewDto();
                     dataZhenXianJiNewDto.setName(dtu.getDtuId());
                     dataZhenXianJiNewDto.setId(i++);
-                    dataZhenXianJiNewDto.setIsOnline(dtu.getIsOnline());
+                    dataZhenXianJiNewDto.setIsOnline((String) jsonObject.get("status"));
                     dataZhenXianJiNewDto.setDeviceId(device.getId());
                     dataZhenXianJiNewDto.setDeviceDeviceId(device.getDeviceId());
                     dataZhenXianJiNewDto.setAddress(dtu.getAddress());
@@ -283,6 +298,9 @@ public class UserAddProController {
             }
 
         }  else if (auth.getAuthorities().toString().equals(RoleVo.USER)){
+
+
+
             // 通过用户名查询用户Id
             QueryWrapper<User> userQueryWrapper = new QueryWrapper<User>()
                     .eq("username",auth.getName());
@@ -307,9 +325,20 @@ public class UserAddProController {
                     continue;
                 }
                 Dtu dt= dtuList1.get(0);
+
+                String url = "http://39.107.228.114:19937/online?DTU_online=" + dt.getDtuId();
+                //         请求客户端
+                RestTemplate client = new RestTemplate();
+                //      发起请求
+                String body = client.getForEntity(url, String.class).getBody();
+                System.out.println("******** Get请求 *********");
+                assert body != null;
+                System.out.println(body);
+                JSONObject jsonObject =  JSON.parseObject(body);
+                System.out.println("jsonObject = " + jsonObject);
                 xianJiNewDto.setId(i++);
                 xianJiNewDto.setName(dt.getDtuId());
-                xianJiNewDto.setIsOnline(dt.getIsOnline());
+                xianJiNewDto.setIsOnline((String) jsonObject.get("status"));
                 xianJiNewDto.setAddress(dt.getAddress());
                 xianJiNewDto.setDeviceId(0);
 //                xianJiNewDto.setDeviceDeviceId(device.getDeviceId());
@@ -334,7 +363,7 @@ public class UserAddProController {
                     DataZhenXianJiNewDto chilData = new DataZhenXianJiNewDto();
                     chilData.setId(i++);
                     chilData.setName(dt.getDtuId());
-                    chilData.setIsOnline(dt.getIsOnline());
+                    chilData.setIsOnline((String) jsonObject.get("status"));
                     chilData.setAddress(dt.getAddress());
                     chilData.setDeviceDeviceId(device.getDeviceId());
                     chilData.setDeviceId(device.getId());

@@ -35,7 +35,7 @@ public class DataZhenXianJiNewDto {
     /**
      * 当前dtu是否在线
      */
-    private Integer isOnline;
+    private String isOnline;
 
     /**
      * 当前dtu地址

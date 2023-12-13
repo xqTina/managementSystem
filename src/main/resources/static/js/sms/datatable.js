@@ -23,26 +23,7 @@ layui.use(['form', 'laydate', 'util','table','treeTable'], function () {
             {type: 'checkbox', title: 'ID', fixed: 'left'},
             {type: 'numbers', title: '序号', width: 70, fixed: 'left' },
             {field: 'isOnline', title: '状态', width: 70, fixed: 'left', templet: function (d) {
-                // 发起请求
-                    // 异步请求绑定
-                    $.ajax({
-                        url: `http://39.107.228.114:19937/online?DTU_online=${d.name}`,
-                        type: 'GET',
-                        // header:{
-                        //     "Access-Control-Allow-Origin": "*"
-                        // },
-                        contentType: "application/json",
-                        success: function (res) {
-                            console.log(res)
-                            return res.status == "1" ? "<i class='iconfont icon-xinhao-online' style='color: green'></i>" : "<i class='iconfont icon-xinhao-online'></i>";
-                        },
-                        error: function (error) {
-                            layer.closeAll("loading");
-                            layer.msg("请求失败");
-                            console.log(error);
-
-                        }
-                    })
+                    return d.isOnline == "1" ? "<i class='iconfont icon-xinhao-online' style='color: #06f306'></i>" : "<i class='iconfont icon-xinhao-online'></i>"
                 }},
             {field: 'name', title: 'DTU序列号', width: 180, fixed: 'left', templet: '<i class="iconfont icon-xinhao-online"></i>'},
             {field: 'deviceDeviceId', title: '设备序列号', minWidth: 100,sort: true,templet: '#ID-table-device-id'},
