@@ -148,12 +148,13 @@ function exportExcel(){
                     <div class="layui-input-inline">
                         <input type="text" id="end"  lay-verify="required" lay-reqtext="请填写结束日期" autocomplete="off" class="layui-input" placeholder="结束日期">
                     </div>
-                </div>
-                <div>
+                </div>    
+        </div>
+         <div class="layui-form-item">
                     <div class="layui-inline">
                         <label class="layui-form-label">DTU编号:</label>
                          <div class="layui-input-inline">
-                            <input name="dtu" placeholder="DTU" class="layui-input" id="ID-dropdown-demo-base-input"  lay-verify="required" lay-reqtext="请选择DTU网关">
+                            <input name="dtu" style="width: 520px;" placeholder="DTU" class="layui-input" id="ID-dropdown-demo-base-input"  lay-verify="required" lay-reqtext="请选择DTU网关">
                          </div>
                     </div>
 <!--                    <div class="layui-inline">-->
@@ -163,7 +164,6 @@ function exportExcel(){
 <!--                         </div>-->
 <!--                    </div>-->
                 </div>
-            </div>
     </form>`;
     layer.open({
         title:'导出',
