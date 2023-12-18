@@ -196,7 +196,6 @@ public class UserAddProController {
             // 没有设置过单位则直接添加
             System.out.println("dataZhenxianjiUnit = " + dataZhenxianjiUnit);
             // 实时更新该正弦id
-//            dataZhenxianjiUnit.setId(dataZhenxianji.getId());
             save = dataZhenxianjiUnitService.save(dataZhenxianjiUnit);
         }else{
             // 根据id保存
@@ -321,7 +320,6 @@ public class UserAddProController {
                 xianJiNewDto.setIsOnline((String) jsonObject.get("status"));
                 xianJiNewDto.setAddress(dt.getAddress());
                 xianJiNewDto.setDeviceId(0);
-//                xianJiNewDto.setDeviceDeviceId(device.getDeviceId());
                 // 查询device表
                 Boolean flag = true; // 表示是否为子目录
                 for (DataZhenXianJiNewDto dtoZhenXian : newDtoArrayList) {
@@ -344,8 +342,6 @@ public class UserAddProController {
                     chilData.setAddress(dt.getAddress());
                     chilData.setDeviceDeviceId(device.getDeviceId());
                     chilData.setDeviceId(device.getId());
-//                    DataZhenxianji dataZhenxianji = dataZhenxianjiService.selectOneMaxDataByDeviceId(String.valueOf(device.getId()));
-//                    chilData.setZhenXianId(dataZhenxianji.getId());
                     dataZhenXianJiNewDtoList.add(chilData);
                     xianJiNewDto.setChildren(dataZhenXianJiNewDtoList);
                     newDtoArrayList.add(xianJiNewDto);
@@ -412,7 +408,6 @@ public class UserAddProController {
                 // 设备设备序列号
                 dataZhenxianji.setDeviceId(Integer.valueOf(deviceDeviceId));
                 dataZhenxianji.setDtuId(dtuId);
-                System.out.println("=================================5555");
             }
 
 
