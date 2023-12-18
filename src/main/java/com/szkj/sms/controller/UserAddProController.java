@@ -60,7 +60,6 @@ public class UserAddProController {
 
     public String show(Model model,
                        @RequestParam(defaultValue = "0", value = "deviceDeviceId") String deviceDeviceId,
-                       @RequestParam(defaultValue = "0", value = "deviceId") String deviceId,
                        @RequestParam(defaultValue = "0", value = "status") String status) {
 
         // 通过deviceDeviceId去查询最近的一条dataZhenxianji中的数据
@@ -74,30 +73,19 @@ public class UserAddProController {
             return "deviceAddProperty";
         }
 
-        System.out.println("deviceId = " + deviceId);
-        System.out.println("deviceId == \"0\" = " + deviceId == "0");
-//        System.out.println(0 == deviceId);
-        System.out.println("deviceId.equals(\"0\") = " + deviceId.toString().equals("0"));
-        DataZhenxianji dataZhenxianji = dataZhenxianjiService.selectOneMaxDataByDeviceId(deviceId);
+
+        DataZhenxianji dataZhenxianji = dataZhenxianjiService.selectOneMaxDataByDeviceId(deviceDeviceId);
         System.out.println("dataZhenxianji = " + dataZhenxianji);
         model.addAttribute("deviceDeviceId",deviceDeviceId);
-        model.addAttribute("deviceId",deviceId);
+
         // 存储最新一条数据时间
         model.addAttribute("dataTime", dataZhenxianji == null?LocalDateTime.now():dataZhenxianji.getDate().toString() +":"+ dataZhenxianji.getTime().toString());
-      // 存储设备参数
-//        Map<String,Object> deviceSelArg = new HashMap<>();
         ArrayList<String> deviceArg = new ArrayList<>();
-//        deviceSelArg.put("压力(N/m2)","N/m2");
-//        deviceSelArg.put("湿度","N/m3");
-//        deviceSelArg.put("温度","N/m4");
-//        deviceSelArg.put("频率","N/m5");
-//        deviceSelArg.put("气压","N/m6");
-//        model.addAttribute("proDeviceArg",deviceSelArg);
         // 表示更新数据表
         // 判断unit表中是否有
-        System.out.println("deviceId = " + deviceId);
+
         QueryWrapper<DataZhenxianjiUnit> queryWrapper = new QueryWrapper<DataZhenxianjiUnit>()
-                .eq("zhenxian_device_id",deviceId);
+                .eq("zhenxian_device_id",deviceDeviceId);
         List<DataZhenxianjiUnit> list = dataZhenxianjiUnitService.list(queryWrapper);
         System.out.println("listsss = " + list);
         if(list.size()!=0){
@@ -242,10 +230,6 @@ public class UserAddProController {
         // 分页
         // 查询所有dtu以及dtu下的设备
         Page<Dtu> pages = null;
-        List<Dtu> dtuList = dtuService.list(dtuQueryWrapper);
-        // 根据device表查询相关dtu对应的数据和device_id
-        // 1. 查询dtu设备
-           // a.查询没有被删除dtu设备
         // 存储总数据表
         List<DataZhenXianJiNewDto> newDtoArrayList = new ArrayList<>();
         // 循环遍历
@@ -272,25 +256,21 @@ public class UserAddProController {
                 xianJiNewDto.setZhenXianId(0);
                 // 存储子节点
                 List<DataZhenXianJiNewDto> dataZhenXianJiNewDtoList = new ArrayList<>();
-                // 查询 根据dtu的id去查询device表
-                QueryWrapper<Device> deviceQueryWrapper = new QueryWrapper<Device>()
-                        .eq("dtu_id",dtu.getId()).eq("is_delete",0);
-                List<Device> deviceList = deviceService.list(deviceQueryWrapper);
-                for (Device device : deviceList) {
-                    if(device.getIsDelete() == 1){
-                        continue;
-                    }
+
+                // 直接到正弦表查询
+                QueryWrapper<DataZhenxianji> zhenxianjiQueryWrapper = new QueryWrapper<DataZhenxianji>()
+                        .eq("dtu_imei",dtu.getDtuId())
+                        .groupBy("device_id");
+                List<DataZhenxianji> zhenxianjiList = dataZhenxianjiService.list(zhenxianjiQueryWrapper);
+
+                for (DataZhenxianji zhenxianji : zhenxianjiList) {
                     DataZhenXianJiNewDto dataZhenXianJiNewDto = new DataZhenXianJiNewDto();
                     dataZhenXianJiNewDto.setName(dtu.getDtuId());
                     dataZhenXianJiNewDto.setId(i++);
                     dataZhenXianJiNewDto.setIsOnline((String) jsonObject.get("status"));
-                    dataZhenXianJiNewDto.setDeviceId(device.getId());
-                    dataZhenXianJiNewDto.setDeviceDeviceId(device.getDeviceId());
+                    dataZhenXianJiNewDto.setDeviceId(zhenxianji.getId());
+                    dataZhenXianJiNewDto.setDeviceDeviceId(String.valueOf(zhenxianji.getDeviceId()));
                     dataZhenXianJiNewDto.setAddress(dtu.getAddress());
-
-                    // 查询最近一条数据
-//                    DataZhenxianji dataZhenxianji = dataZhenxianjiService.selectOneMaxDataByDeviceId(String.valueOf(device.getId()));
-//                    dataZhenXianJiNewDto.setZhenXianId(dataZhenxianji.getId());
                     dataZhenXianJiNewDtoList.add(dataZhenXianJiNewDto);
                 }
                 xianJiNewDto.setChildren(dataZhenXianJiNewDtoList);
@@ -349,9 +329,6 @@ public class UserAddProController {
                     if(dt.getDtuId().equals(dtoZhenXian.getName())){
                         xianJiNewDto.setDeviceId(device.getId());
                         xianJiNewDto.setDeviceDeviceId(device.getDeviceId());
-                        // 查询最近一条数据
-//                        DataZhenxianji dataZhenxianji = dataZhenxianjiService.selectOneMaxDataByDeviceId(String.valueOf(device.getId()));
-//                        xianJiNewDto.setZhenXianId(dataZhenxianji.getId());
                         dtoZhenXian.getChildren().add(xianJiNewDto);
                         flag = false;
                         break;
@@ -392,13 +369,12 @@ public class UserAddProController {
     @GetMapping("/data_zhenxianji/data")
     public JsonResult findDataByDeviceID(Model model,@RequestParam(defaultValue = "1", value = "page") Integer page,
                                  @RequestParam(defaultValue = "10", value = "limit") Integer limit,
-                                 @RequestParam(defaultValue = "0", value = "deviceId") Integer deviceId,
                                  @RequestParam(defaultValue = "0", value = "dtuId") String dtuId,
                                          @RequestParam(defaultValue = "0", value = "deviceDeviceId") String deviceDeviceId){
         System.out.println("dtuId = " + dtuId);
         Page<DataZhenxianji> zhenxianjiPage = new Page<>(page, limit);
         QueryWrapper<DataZhenxianji> dataZhenxianjiQueryWrapper = new QueryWrapper<DataZhenxianji>()
-                .eq("device_id",deviceId)
+                .eq("device_id",deviceDeviceId)
                 .orderByDesc("date","time");
         Page<DataZhenxianji> pages = dataZhenxianjiService.page(zhenxianjiPage,dataZhenxianjiQueryWrapper);
         for (DataZhenxianji record : pages.getRecords()) {
@@ -406,7 +382,7 @@ public class UserAddProController {
         }
         // 查询用户是否添加了数据参数
         QueryWrapper<DataZhenxianjiUnit> dataZhenxianjiUnitQueryWrapper = new QueryWrapper<DataZhenxianjiUnit>()
-                .eq("zhenxian_device_id",deviceId);
+                .eq("zhenxian_device_id",deviceDeviceId);
         List<DataZhenxianjiUnit> dataZhenxianjiUnits = dataZhenxianjiUnitService.list(dataZhenxianjiUnitQueryWrapper);
 
             // 该用户设置了参数 拼接
