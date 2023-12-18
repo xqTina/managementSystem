@@ -375,6 +375,7 @@ public class UserAddProController {
         Page<DataZhenxianji> zhenxianjiPage = new Page<>(page, limit);
         QueryWrapper<DataZhenxianji> dataZhenxianjiQueryWrapper = new QueryWrapper<DataZhenxianji>()
                 .eq("device_id",deviceDeviceId)
+                .eq("dtu_imei",dtuId)
                 .orderByDesc("date","time");
         Page<DataZhenxianji> pages = dataZhenxianjiService.page(zhenxianjiPage,dataZhenxianjiQueryWrapper);
         for (DataZhenxianji record : pages.getRecords()) {
