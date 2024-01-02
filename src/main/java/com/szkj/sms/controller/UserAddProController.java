@@ -351,6 +351,11 @@ public class UserAddProController {
         for (DataZhenXianJiNewDto xianJiNewDto : newDtoArrayList) {
             System.out.println("xianJiNewDto = " + xianJiNewDto);
         }
+
+        // 将在线设备放在列表最前面
+        //排序
+
+        newDtoArrayList.sort((o1, o2) -> Integer.valueOf(o2.getIsOnline()) - Integer.valueOf(o1.getIsOnline()));
         return new JsonResult(0, "success",newDtoArrayList,pages == null?newDtoArrayList.size():pages.getTotal());
 
 
