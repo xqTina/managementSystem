@@ -5,12 +5,11 @@
 <div class="layui-fluid" id="deviceeditdiv">
   <div class="layui-row" th:if="${failMsg}==''">
     <form class="layui-form">
-
       <form class="layui-form" action="" style="padding: 20px">
         <div class="layui-form-item">
           <label class="layui-form-label">当前设备:</label>
           <div class="layui-input-block">
-            <input type="text" name="device_id" th:value="${deviceId}" lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input" style="width: 200px" readonly="true">
+            <input type="text" name="device_id" th:value="${deviceDeviceId}" lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input" style="width: 200px" readonly="true">
           </div>
         </div>
         <div class="layui-form-item">

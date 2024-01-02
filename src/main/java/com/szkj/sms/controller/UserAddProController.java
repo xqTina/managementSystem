@@ -22,6 +22,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -313,11 +314,16 @@ public class UserAddProController {
                 System.out.println("******** Get请求 *********");
                 assert body != null;
                 System.out.println(body);
-                JSONObject jsonObject =  JSON.parseObject(body);
+                JSONObject jsonObject = null;
+                try {
+                    jsonObject =  JSON.parseObject(body);
+                    xianJiNewDto.setIsOnline((String) jsonObject.get("status"));
+                }catch (Exception e){
+                    xianJiNewDto.setIsOnline("0");
+                }
                 System.out.println("jsonObject = " + jsonObject);
                 xianJiNewDto.setId(i++);
                 xianJiNewDto.setName(dt.getDtuId());
-                xianJiNewDto.setIsOnline((String) jsonObject.get("status"));
                 xianJiNewDto.setAddress(dt.getAddress());
                 xianJiNewDto.setDeviceId(0);
                 // 查询device表

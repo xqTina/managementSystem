@@ -87,7 +87,7 @@ layui.use(['form', 'layedit', 'laydate'], function () {
         j_s.hide();
         j_f.hide();
         layer.load(1);
-        // layer.msg(JSON.stringify(data.field));
+        console.log(JSON.stringify(data.field));
         $.ajax({
             url: '/chart/getData',
             type: 'GET',

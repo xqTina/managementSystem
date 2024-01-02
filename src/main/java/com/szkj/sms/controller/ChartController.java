@@ -94,11 +94,12 @@ public class ChartController {
     @ResponseBody
     @GetMapping("/getData")
     public JsonResult getData(String date, Integer deviceId) {
+        //传过来的deviceId 为主键
         //, Integer noc  || noc < 0
         if (date.length() != 10 || deviceId <= 0 ) {
             return new JsonResult(-1, "参数错误");
         }
-        // 先查询设备类型
+        // 先查询设备类型 传入设备编号查询
         Device device = deviceService.getById(deviceId);
         if (device == null) {
             return new JsonResult(-1, "设备不存在");
@@ -106,11 +107,11 @@ public class ChartController {
         // 根据类型不同返回不同的数据
         switch (device.getDeviceType()) {
             case "liefengji":
-                return new JsonResult(0, "liefengji", dataLiefengjiService.list(new QueryWrapper<DataLiefengji>().eq("device_id", deviceId).eq("date", date)));
+                return new JsonResult(0, "liefengji", dataLiefengjiService.list(new QueryWrapper<DataLiefengji>().eq("device_id", device.getDeviceId()).eq("date", date)));
             case "qingxieji":
-                return new JsonResult(0, "qingxieji", dataQingxiejiService.list(new QueryWrapper<DataQingxieji>().eq("device_id", deviceId).eq("date", date)));
+                return new JsonResult(0, "qingxieji", dataQingxiejiService.list(new QueryWrapper<DataQingxieji>().eq("device_id", device.getDeviceId()).eq("date", date)));
             case "zhenxianji":
-                return new JsonResult(0, "zhenxianji", dataZhenxianjiService.list(new QueryWrapper<DataZhenxianji>().eq("device_id", deviceId).eq("date", date)));
+                return new JsonResult(0, "zhenxianji", dataZhenxianjiService.list(new QueryWrapper<DataZhenxianji>().eq("device_id", device.getDeviceId()).eq("date", date)));
             default:
                 return new JsonResult(-1, "此设备未定义设备类型，无法获取数据，请在设备管理中定义设备类型");
         }
