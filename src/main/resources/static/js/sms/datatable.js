@@ -9,7 +9,7 @@ layui.use(['form', 'laydate', 'util','table','treeTable'], function () {
 
     form.render()
     treetable.render({
-        url: `/pro/data_zhenxianji/table`,
+        url: `/pro/data_zhenxianji/page`,
         tree: {
             iconIndex: 2, // 折叠图标显示在第几列
             childName: 'children',
@@ -31,9 +31,17 @@ layui.use(['form', 'laydate', 'util','table','treeTable'], function () {
             { title: '操作', minWidth: 100, sort: true, templet: '#zhenxianji_operation', fixed: 'right'}
         ]],
         //数据渲染完的回调
-        done: function () {
+        done: function (res) {
+            console.log("数据渲染完回调")
+            console.log(res)
+
             //关闭加载
             layer.closeAll('loading');
+        },
+        error:function (){
+            layer.msg("请稍等...");
+
+            treetable.reload('LAY-zhenxianji-table')
         }
     })
 

@@ -22,12 +22,14 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Controller
 @Api(tags = "用户添加设备属性")
@@ -36,7 +38,7 @@ import java.util.*;
 public class UserAddProController {
 
 
-//    private String[] deviceArg;
+    //    private String[] deviceArg;
     @Autowired
     private DataZhenxianjiService dataZhenxianjiService;
 
@@ -111,14 +113,14 @@ public class UserAddProController {
                             if(nameD == nameF && valueD.length()!=0){
 //                                for (String s : deviceSelArg.keySet()) {
 //                                   if( deviceSelArg.get(s).equals(valueD)){
-                                       if(status.equals("1")){
-                                           deviceArg.add(valueF + "_" + valueD);
-                                       }else if (status.equals("2")){
-                                           deviceArg.add(valueD+ "_"+valueF + valueD);
-                                       }
-                                       flag = false;
-                                       break;
-                                   }
+                                if(status.equals("1")){
+                                    deviceArg.add(valueF + "_" + valueD);
+                                }else if (status.equals("2")){
+                                    deviceArg.add(valueD+ "_"+valueF + valueD);
+                                }
+                                flag = false;
+                                break;
+                            }
 //                                }
 //                                }
                         }
@@ -142,10 +144,10 @@ public class UserAddProController {
                 System.out.println("ex inner= " + ex);
             }
         }else {
-           if (status.equals("2")) {
-               model.addAttribute("failMsg", "暂无设置参数值，请先设置");
-               return "showDeviceArg";
-           }
+            if (status.equals("2")) {
+                model.addAttribute("failMsg", "暂无设置参数值，请先设置");
+                return "showDeviceArg";
+            }
             try {
                 //通过getDeclaredFields()方法获取对象类中的所有属性（含私有）
                 Field[] fields = dataZhenxianji.getClass().getDeclaredFields();
@@ -183,8 +185,8 @@ public class UserAddProController {
     @ApiOperation(value = "添加属性管理页面路由")
     @PostMapping("/user/add/{deviceId}")
     public JsonResult JsonResult(Model model,
-                         @PathVariable Integer deviceId,
-                         @RequestBody DataZhenxianjiUnit dataZhenxianjiUnit) {
+                                 @PathVariable Integer deviceId,
+                                 @RequestBody DataZhenxianjiUnit dataZhenxianjiUnit) {
 
         // 判断当前设备id是否存在
         DataZhenxianji dataZhenxianji = dataZhenxianjiService.selectOneMaxDataByDeviceId(String.valueOf(deviceId));
@@ -203,7 +205,7 @@ public class UserAddProController {
             // 如何已设置单位则直接更新
             dataZhenxianjiUnit.setId(zhenxianjiUnitList.get(0).getId());
             // 更新
-             save = dataZhenxianjiUnitService.updateById(dataZhenxianjiUnit);
+            save = dataZhenxianjiUnitService.updateById(dataZhenxianjiUnit);
         }
 
         if(!save){
@@ -215,14 +217,20 @@ public class UserAddProController {
 
 
 
+
+
+
+
+
+
+
+
     @ResponseBody
     @ApiOperation(value = "test")
     @GetMapping("/data_zhenxianji/table")
-    public JsonResult findProNew(Model model,@RequestParam(defaultValue = "1", value = "page") Integer page,
-                              @RequestParam(defaultValue = "10", value = "limit") Integer limit) {
+    public JsonResult findProNewTest(HttpServletRequest request) {
 
 
-        Page<Dtu> dtuPage = new Page<>(page, limit);
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         // 查询没有删除的设备
         QueryWrapper<Dtu> dtuQueryWrapper = new QueryWrapper<Dtu>()
@@ -235,8 +243,8 @@ public class UserAddProController {
         // 循环遍历
         int i = 1;
         if ( auth.getAuthorities().toString().equals(RoleVo.ADMIN) || auth.getAuthorities().toString().equals(RoleVo.DEV)) {
-            pages = dtuService.page(dtuPage,dtuQueryWrapper);
-            for (Dtu dtu : pages.getRecords()) {
+            List<Dtu> dtuList = dtuService.list(dtuQueryWrapper);
+            for (Dtu dtu : dtuList) {
                 String url = "http://39.107.228.114:19937/online?DTU_online=" + dtu.getDtuId();
                 //         请求客户端
                 RestTemplate client = new RestTemplate();
@@ -362,11 +370,34 @@ public class UserAddProController {
         //排序
 
         newDtoArrayList.sort((o1, o2) -> Integer.valueOf(o2.getIsOnline()) - Integer.valueOf(o1.getIsOnline()));
-        return new JsonResult(0, "success",newDtoArrayList,pages == null?newDtoArrayList.size():pages.getTotal());
+        request.getSession().setAttribute("dtuData",newDtoArrayList);
+        return new JsonResult(0, "success","");
 
 
     }
 
+
+
+    //分页
+    @ResponseBody
+    @ApiOperation(value = "test")
+    @GetMapping("/data_zhenxianji/page")
+    public JsonResult findProNewPage(Model model,@RequestParam(defaultValue = "1", value = "page") Integer page,
+                                 @RequestParam(defaultValue = "10", value = "limit") Integer limit,HttpServletRequest request) {
+
+        List<DataZhenXianJiNewDto>dtuData = (List<DataZhenXianJiNewDto>) request.getSession().getAttribute("dtuData");
+
+
+
+            // 进行分页
+            List<DataZhenXianJiNewDto> subList = dtuData.stream().skip((page-1)*limit).limit(limit).
+                    collect(Collectors.toList());
+            return new JsonResult(0, "success",subList,dtuData.size());
+
+
+
+
+    }
 
 
 
@@ -375,8 +406,8 @@ public class UserAddProController {
     @ApiOperation(value = "根据设备id查询当前所有正弦数据")
     @GetMapping("/data_zhenxianji/data")
     public JsonResult findDataByDeviceID(Model model,@RequestParam(defaultValue = "1", value = "page") Integer page,
-                                 @RequestParam(defaultValue = "10", value = "limit") Integer limit,
-                                 @RequestParam(defaultValue = "0", value = "dtuId") String dtuId,
+                                         @RequestParam(defaultValue = "10", value = "limit") Integer limit,
+                                         @RequestParam(defaultValue = "0", value = "dtuId") String dtuId,
                                          @RequestParam(defaultValue = "0", value = "deviceDeviceId") String deviceDeviceId){
         System.out.println("dtuId = " + dtuId);
         Page<DataZhenxianji> zhenxianjiPage = new Page<>(page, limit);
@@ -393,36 +424,203 @@ public class UserAddProController {
                 .eq("zhenxian_device_id",deviceDeviceId);
         List<DataZhenxianjiUnit> dataZhenxianjiUnits = dataZhenxianjiUnitService.list(dataZhenxianjiUnitQueryWrapper);
 
-            // 该用户设置了参数 拼接
-            for (DataZhenxianji dataZhenxianji : pages.getRecords()) {
-                if (dataZhenxianjiUnits.size() != 0) {
-                    DataZhenxianjiUnit dataZhenxianjiUnit = dataZhenxianjiUnits.get(0);
-                    // 直接拼接单位
-                    dataZhenxianji.setTemperature(!dataZhenxianji.getTemperature().equals("0.0") ? dataZhenxianji.getTemperature() + dataZhenxianjiUnit.getTemperature() : dataZhenxianji.getTemperature());
-                    dataZhenxianji.setFreqency(!dataZhenxianji.getFreqency().equals("0.0") ? dataZhenxianji.getFreqency() + dataZhenxianjiUnit.getFreqency() : dataZhenxianji.getFreqency());
-                    dataZhenxianji.setYingbian(!dataZhenxianji.getYingbian().equals("0.0") ? dataZhenxianji.getYingbian() + dataZhenxianjiUnit.getYingbian() : dataZhenxianji.getYingbian());
-                    dataZhenxianji.setData3(!dataZhenxianji.getData3().equals("0.0") ? dataZhenxianji.getData3() + dataZhenxianjiUnit.getData3() : dataZhenxianji.getData3());
-                    dataZhenxianji.setData4(!dataZhenxianji.getData4().equals("0.0") ? dataZhenxianji.getData4() + dataZhenxianjiUnit.getData4() : dataZhenxianji.getData4());
-                    dataZhenxianji.setData5(!dataZhenxianji.getData5().equals("0.0") ? dataZhenxianji.getData5() + dataZhenxianjiUnit.getData5() : dataZhenxianji.getData5());
-                    dataZhenxianji.setData6(!dataZhenxianji.getData6().equals("0.0") ? dataZhenxianji.getData6() + dataZhenxianjiUnit.getData6() : dataZhenxianji.getData6());
-                    dataZhenxianji.setData7(!dataZhenxianji.getData7().equals("0.0") ? dataZhenxianji.getData7() + dataZhenxianjiUnit.getData7() : dataZhenxianji.getData6());
-                    dataZhenxianji.setData8(!dataZhenxianji.getData8().equals("0.0") ? dataZhenxianji.getData8() + dataZhenxianjiUnit.getData8() : dataZhenxianji.getData8());
-                    dataZhenxianji.setData9(!dataZhenxianji.getData9().equals("0.0") ? dataZhenxianji.getData9() + dataZhenxianjiUnit.getData9() : dataZhenxianji.getData9());
-                    dataZhenxianji.setData10(!dataZhenxianji.getData10().equals("0.0") ? dataZhenxianji.getData10() + dataZhenxianjiUnit.getData10() : dataZhenxianji.getData10());
-                    dataZhenxianji.setData11(!dataZhenxianji.getData11().equals("0.0") ? dataZhenxianji.getData11() + dataZhenxianjiUnit.getData11() : dataZhenxianji.getData11());
-                    dataZhenxianji.setData12(!dataZhenxianji.getData12().equals("0.0") ? dataZhenxianji.getData11() + dataZhenxianjiUnit.getData11() : dataZhenxianji.getData12());
-                    dataZhenxianji.setData13(!dataZhenxianji.getData13().equals("0.0") ? dataZhenxianji.getData13() + dataZhenxianjiUnit.getData13() : dataZhenxianji.getData13());
-                    dataZhenxianji.setData14(!dataZhenxianji.getData14().equals("0.0") ? dataZhenxianji.getData14() + dataZhenxianjiUnit.getData14() : dataZhenxianji.getData14());
-                    dataZhenxianji.setData15(!dataZhenxianji.getData15().equals("0.0") ? dataZhenxianji.getData15() + dataZhenxianjiUnit.getData15() : dataZhenxianji.getData15());
-                }
-
-                // 设备设备序列号
-                dataZhenxianji.setDeviceId(Integer.valueOf(deviceDeviceId));
-                dataZhenxianji.setDtuId(dtuId);
+        // 该用户设置了参数 拼接
+        for (DataZhenxianji dataZhenxianji : pages.getRecords()) {
+            if (dataZhenxianjiUnits.size() != 0) {
+                DataZhenxianjiUnit dataZhenxianjiUnit = dataZhenxianjiUnits.get(0);
+                // 直接拼接单位
+                dataZhenxianji.setTemperature(!dataZhenxianji.getTemperature().equals("0.0") ? dataZhenxianji.getTemperature() + dataZhenxianjiUnit.getTemperature() : dataZhenxianji.getTemperature());
+                dataZhenxianji.setFreqency(!dataZhenxianji.getFreqency().equals("0.0") ? dataZhenxianji.getFreqency() + dataZhenxianjiUnit.getFreqency() : dataZhenxianji.getFreqency());
+                dataZhenxianji.setYingbian(!dataZhenxianji.getYingbian().equals("0.0") ? dataZhenxianji.getYingbian() + dataZhenxianjiUnit.getYingbian() : dataZhenxianji.getYingbian());
+                dataZhenxianji.setData3(!dataZhenxianji.getData3().equals("0.0") ? dataZhenxianji.getData3() + dataZhenxianjiUnit.getData3() : dataZhenxianji.getData3());
+                dataZhenxianji.setData4(!dataZhenxianji.getData4().equals("0.0") ? dataZhenxianji.getData4() + dataZhenxianjiUnit.getData4() : dataZhenxianji.getData4());
+                dataZhenxianji.setData5(!dataZhenxianji.getData5().equals("0.0") ? dataZhenxianji.getData5() + dataZhenxianjiUnit.getData5() : dataZhenxianji.getData5());
+                dataZhenxianji.setData6(!dataZhenxianji.getData6().equals("0.0") ? dataZhenxianji.getData6() + dataZhenxianjiUnit.getData6() : dataZhenxianji.getData6());
+                dataZhenxianji.setData7(!dataZhenxianji.getData7().equals("0.0") ? dataZhenxianji.getData7() + dataZhenxianjiUnit.getData7() : dataZhenxianji.getData6());
+                dataZhenxianji.setData8(!dataZhenxianji.getData8().equals("0.0") ? dataZhenxianji.getData8() + dataZhenxianjiUnit.getData8() : dataZhenxianji.getData8());
+                dataZhenxianji.setData9(!dataZhenxianji.getData9().equals("0.0") ? dataZhenxianji.getData9() + dataZhenxianjiUnit.getData9() : dataZhenxianji.getData9());
+                dataZhenxianji.setData10(!dataZhenxianji.getData10().equals("0.0") ? dataZhenxianji.getData10() + dataZhenxianjiUnit.getData10() : dataZhenxianji.getData10());
+                dataZhenxianji.setData11(!dataZhenxianji.getData11().equals("0.0") ? dataZhenxianji.getData11() + dataZhenxianjiUnit.getData11() : dataZhenxianji.getData11());
+                dataZhenxianji.setData12(!dataZhenxianji.getData12().equals("0.0") ? dataZhenxianji.getData11() + dataZhenxianjiUnit.getData11() : dataZhenxianji.getData12());
+                dataZhenxianji.setData13(!dataZhenxianji.getData13().equals("0.0") ? dataZhenxianji.getData13() + dataZhenxianjiUnit.getData13() : dataZhenxianji.getData13());
+                dataZhenxianji.setData14(!dataZhenxianji.getData14().equals("0.0") ? dataZhenxianji.getData14() + dataZhenxianjiUnit.getData14() : dataZhenxianji.getData14());
+                dataZhenxianji.setData15(!dataZhenxianji.getData15().equals("0.0") ? dataZhenxianji.getData15() + dataZhenxianjiUnit.getData15() : dataZhenxianji.getData15());
             }
+
+            // 设备设备序列号
+            dataZhenxianji.setDeviceId(Integer.valueOf(deviceDeviceId));
+            dataZhenxianji.setDtuId(dtuId);
+        }
 
 
         return new JsonResult(0, "success",pages.getRecords(),pages.getTotal());
     }
+
+
+
+
+
+
+
+
+
+
+
+
+//    @ResponseBody
+//    @ApiOperation(value = "test")
+//    @GetMapping("/data_zhenxianji/table")
+//    public JsonResult findProNews(Model model,@RequestParam(defaultValue = "1", value = "page") Integer page,
+//                                  @RequestParam(defaultValue = "10", value = "limit") Integer limit) {
+//
+//
+//        Page<Dtu> dtuPage = new Page<>(page, limit);
+//        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+//        // 查询没有删除的设备
+//        QueryWrapper<Dtu> dtuQueryWrapper = new QueryWrapper<Dtu>()
+//                .eq("is_delete",0);
+//        // 分页
+//        // 查询所有dtu以及dtu下的设备
+//        Page<Dtu> pages = null;
+//        // 存储总数据表
+//        List<DataZhenXianJiNewDto> newDtoArrayList = new ArrayList<>();
+//        // 循环遍历
+//        int i = 1;
+//        if ( auth.getAuthorities().toString().equals(RoleVo.ADMIN) || auth.getAuthorities().toString().equals(RoleVo.DEV)) {
+//            pages = dtuService.page(dtuPage,dtuQueryWrapper);
+//            for (Dtu dtu : pages.getRecords()) {
+//                String url = "http://39.107.228.114:19937/online?DTU_online=" + dtu.getDtuId();
+//                //         请求客户端
+//                RestTemplate client = new RestTemplate();
+//                //      发起请求
+//                String body = client.getForEntity(url, String.class).getBody();
+//                System.out.println("******** Get请求 *********");
+//                assert body != null;
+//                JSONObject jsonObject =  JSON.parseObject(body);
+//
+//                System.out.println("jsonObject.get(\"status\") = " + jsonObject.get("status"));
+//                DataZhenXianJiNewDto xianJiNewDto = new DataZhenXianJiNewDto();
+//                xianJiNewDto.setId(i++);
+//                xianJiNewDto.setAddress(dtu.getAddress());
+//                xianJiNewDto.setIsOnline((String) jsonObject.get("status"));
+//                xianJiNewDto.setName(dtu.getDtuId());
+//                xianJiNewDto.setDeviceId(0);
+//                xianJiNewDto.setZhenXianId(0);
+//                // 存储子节点
+//                List<DataZhenXianJiNewDto> dataZhenXianJiNewDtoList = new ArrayList<>();
+//
+//                // 直接到正弦表查询
+//                QueryWrapper<DataZhenxianji> zhenxianjiQueryWrapper = new QueryWrapper<DataZhenxianji>()
+//                        .eq("dtu_imei",dtu.getDtuId())
+//                        .groupBy("device_id");
+//                List<DataZhenxianji> zhenxianjiList = dataZhenxianjiService.list(zhenxianjiQueryWrapper);
+//
+//                for (DataZhenxianji zhenxianji : zhenxianjiList) {
+//                    DataZhenXianJiNewDto dataZhenXianJiNewDto = new DataZhenXianJiNewDto();
+//                    dataZhenXianJiNewDto.setName(dtu.getDtuId());
+//                    dataZhenXianJiNewDto.setId(i++);
+//                    dataZhenXianJiNewDto.setIsOnline((String) jsonObject.get("status"));
+//                    dataZhenXianJiNewDto.setDeviceId(zhenxianji.getId());
+//                    dataZhenXianJiNewDto.setDeviceDeviceId(String.valueOf(zhenxianji.getDeviceId()));
+//                    dataZhenXianJiNewDto.setAddress(dtu.getAddress());
+//                    dataZhenXianJiNewDtoList.add(dataZhenXianJiNewDto);
+//                }
+//                xianJiNewDto.setChildren(dataZhenXianJiNewDtoList);
+//                newDtoArrayList.add(xianJiNewDto);
+//            }
+//
+//        }  else if (auth.getAuthorities().toString().equals(RoleVo.USER)){
+//
+//
+//
+//            // 通过用户名查询用户Id
+//            QueryWrapper<User> userQueryWrapper = new QueryWrapper<User>()
+//                    .eq("username",auth.getName());
+//            User user = userService.list(userQueryWrapper).get(0);
+//            // 查询设备中间表
+//            QueryWrapper<DeviceUser> deviceUserQueryWrapper = new QueryWrapper<DeviceUser>()
+//                    .eq("user_id",user.getId()).eq("is_delete",0);
+//            List<DeviceUser> deviceUserList = deviceUserService.list(deviceUserQueryWrapper);
+//            // 查询device表中所有的设备
+//            for (DeviceUser deviceUser : deviceUserList) {
+//                DataZhenXianJiNewDto xianJiNewDto = new DataZhenXianJiNewDto();
+//                QueryWrapper<Device> deviceQueryWrapper = new QueryWrapper<Device>()
+//                        .eq("id",deviceUser.getDeviceId())
+//                        .eq("is_delete",0).eq("is_delete",0);
+//                Device device = deviceService.list(deviceQueryWrapper).get(0);
+//
+//                QueryWrapper<Dtu> dtuQueryWrapper1 = new QueryWrapper<Dtu>()
+//                        .eq("id",device.getDtuId())
+//                        .eq("is_delete",0);
+//                List<Dtu> dtuList1 = dtuService.list(dtuQueryWrapper1);
+//                if(dtuList1.size() == 0){
+//                    continue;
+//                }
+//                Dtu dt= dtuList1.get(0);
+//
+//                String url = "http://39.107.228.114:19937/online?DTU_online=" + dt.getDtuId();
+//                //         请求客户端
+//                RestTemplate client = new RestTemplate();
+//                //      发起请求
+//                String body = client.getForEntity(url, String.class).getBody();
+//                System.out.println("******** Get请求 *********");
+//                assert body != null;
+//                System.out.println(body);
+//                JSONObject jsonObject = null;
+//                try {
+//                    jsonObject =  JSON.parseObject(body);
+//                    xianJiNewDto.setIsOnline((String) jsonObject.get("status"));
+//                }catch (Exception e){
+//                    xianJiNewDto.setIsOnline("0");
+//                }
+//                System.out.println("jsonObject = " + jsonObject);
+//                xianJiNewDto.setId(i++);
+//                xianJiNewDto.setName(dt.getDtuId());
+//                xianJiNewDto.setAddress(dt.getAddress());
+//                xianJiNewDto.setDeviceId(0);
+//                // 查询device表
+//                Boolean flag = true; // 表示是否为子目录
+//                for (DataZhenXianJiNewDto dtoZhenXian : newDtoArrayList) {
+//                    // 判断是否是子目录  dtoZhenXian.getName() 相当于 dtu_id
+//                    if(dt.getDtuId().equals(dtoZhenXian.getName())){
+//                        xianJiNewDto.setDeviceId(device.getId());
+//                        xianJiNewDto.setDeviceDeviceId(device.getDeviceId());
+//                        dtoZhenXian.getChildren().add(xianJiNewDto);
+//                        flag = false;
+//                        break;
+//                    }
+//                }
+//
+//                if(flag){
+//                    List<DataZhenXianJiNewDto> dataZhenXianJiNewDtoList = new ArrayList<>();
+//                    DataZhenXianJiNewDto chilData = new DataZhenXianJiNewDto();
+//                    chilData.setId(i++);
+//                    chilData.setName(dt.getDtuId());
+//                    chilData.setIsOnline((String) jsonObject.get("status"));
+//                    chilData.setAddress(dt.getAddress());
+//                    chilData.setDeviceDeviceId(device.getDeviceId());
+//                    chilData.setDeviceId(device.getId());
+//                    dataZhenXianJiNewDtoList.add(chilData);
+//                    xianJiNewDto.setChildren(dataZhenXianJiNewDtoList);
+//                    newDtoArrayList.add(xianJiNewDto);
+//                }
+//            }
+//        }
+//        for (DataZhenXianJiNewDto xianJiNewDto : newDtoArrayList) {
+//            System.out.println("xianJiNewDto = " + xianJiNewDto);
+//        }
+//
+//        // 将在线设备放在列表最前面
+//        //排序
+//
+//        newDtoArrayList.sort((o1, o2) -> Integer.valueOf(o2.getIsOnline()) - Integer.valueOf(o1.getIsOnline()));
+//        return new JsonResult(0, "success",newDtoArrayList,pages == null?newDtoArrayList.size():pages.getTotal());
+//
+//
+//    }
+//
+
+
+
 
 }

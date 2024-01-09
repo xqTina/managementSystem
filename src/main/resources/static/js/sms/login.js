@@ -31,19 +31,51 @@ layui.use('form', function () {
                 code: data.field.code
             }, //数据
             // beforeSend: function(request) {
-            //     request.setRequestHeader(csrfHeader, csrfToken); // 添加  CSRF Token
+            //     // request.setRequestHeader(csrfHeader, csrfToken); // 添加  CSRF Token
+            //     // 直接在这里调用接口查询所有dtu设备 然后在控制器里面存入全局变量里面（session）
+            //
             // },
             success: function (res, textStatus, jqXHR) {
+
                 // 关闭等待弹窗
                 layer.closeAll('loading');
                 // 转换为JSON对象
                 var v = JSON.parse(res);
                 // 结果判断
                 if (v.code === 0) {
+                    $.ajax({
+                        type: 'GET',
+                        url: "/pro/data_zhenxianji/table",
+                        cache: false,
+                        processData: true,
+                        timeout: 30000,
+                        success: function (res, textStatus, jqXHR) {
+                            // 关闭等待弹窗
+                            layer.closeAll('loading');
+                            // 转换为JSON对象
+                            var v = JSON.parse(res);
+                            // 结果判断
+                            if (v.code === 0) {
+                                console.log("查询dtu数据成功")
+                                // 直接在这里调用接口查询所有dtu设备 然后在控制器里面存入全局变量里面（session）
+                                // setTimeout(function () {
+                                //     window.location.href = '/';
+                                // }, 1000);
+                            }
+                            else {
+                                console.log("查询dtu-失败")
+                            }
+                        },
+                        error: function (error, textStatus, jqXHR) {
+
+
+                        }
+                    });
                     layer.msg('登录成功', {icon: 1});
                     setTimeout(function () {
                         window.location.href = '/';
-                    }, 1000);
+                    }, 3000);
+
                 } else {
                     // 登录失败显示错误信息
                     layer.msg(v.data, {icon: 2, time: 1500});

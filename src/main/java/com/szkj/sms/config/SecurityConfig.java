@@ -1,9 +1,16 @@
 package com.szkj.sms.config;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.szkj.sms.dto.DataZhenXianJiNewDto;
+import com.szkj.sms.entity.*;
 import com.szkj.sms.filter.CaptchaFilter;
 import com.szkj.sms.handler.MyAuthenticationFailureHandler;
 import com.szkj.sms.handler.MyAuthenticationSuccessHandler;
+import com.szkj.sms.service.*;
 import com.szkj.sms.service.impl.UserDetailServiceImpl;
+import com.szkj.sms.vo.RoleVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -11,9 +18,17 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.client.RestTemplate;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @ClassName: SecurityConfig
@@ -23,7 +38,23 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
  */
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+    @Autowired
+    private DataZhenxianjiService dataZhenxianjiService;
 
+    @Autowired
+    private DeviceService deviceService;
+
+    @Autowired
+    private DtuService dtuService;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private DeviceUserService deviceUserService;
+
+    @Autowired
+    private DataZhenxianjiUnitService dataZhenxianjiUnitService;
     private final MyAuthenticationSuccessHandler authenticationSuccessHandler;
     private final MyAuthenticationFailureHandler authenticationFailHandler;
     private final CaptchaFilter captchaFilter;
@@ -36,6 +67,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         this.captchaFilter = captchaFilter;
         this.userDetailService = userDetailService;
 //        this.alreadyLoginFilter = alreadyLoginFilter;
+
     }
 
     @Bean
@@ -95,5 +127,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailService).passwordEncoder(new BCryptPasswordEncoder());
+
+
+
     }
 }
