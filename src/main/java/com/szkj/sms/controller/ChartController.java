@@ -1,10 +1,9 @@
 package com.szkj.sms.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.szkj.sms.entity.DataLiefengji;
-import com.szkj.sms.entity.DataQingxieji;
-import com.szkj.sms.entity.DataZhenxianji;
-import com.szkj.sms.entity.Device;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.szkj.sms.entity.*;
+import com.szkj.sms.service.DataZhenxianjiUnitService;
 import com.szkj.sms.service.impl.*;
 import com.szkj.sms.util.JsonResult;
 import com.szkj.sms.vo.RoleVo;
@@ -19,6 +18,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.HashMap;
+
 /**
  * @Author: <a href="http://sixiwenwu.com"/>
  * @Date: 2021/9/25 12:14
@@ -32,12 +33,13 @@ public class ChartController {
     private final MyDeviceServiceImpl myDeviceService;
     private final DtuServiceImpl dtuService;
     private final DeviceServiceImpl deviceService;
+    private final DataZhenxianjiUnitService dataZhenxianjiUnitService;
     private final DataLiefengjiServiceImpl dataLiefengjiService;
     private final DataQingxiejiServiceImpl dataQingxiejiService;
     private final DataZhenxianjiServiceImpl dataZhenxianjiService;
 
     @Autowired
-    public ChartController(MyDataServiceImpl myDataService, MyDeviceServiceImpl myDeviceService, DtuServiceImpl dtuService, DeviceServiceImpl deviceService, DataZhenxianjiServiceImpl dataZhenxianjiService, DataLiefengjiServiceImpl dataLiefengjiService, DataQingxiejiServiceImpl dataQingxiejiService) {
+    public ChartController(MyDataServiceImpl myDataService, MyDeviceServiceImpl myDeviceService, DtuServiceImpl dtuService, DeviceServiceImpl deviceService, DataZhenxianjiServiceImpl dataZhenxianjiService, DataLiefengjiServiceImpl dataLiefengjiService, DataQingxiejiServiceImpl dataQingxiejiService,DataZhenxianjiUnitService dataZhenxianjiUnitService) {
         this.myDataService = myDataService;
         this.myDeviceService = myDeviceService;
         this.dtuService = dtuService;
@@ -45,6 +47,7 @@ public class ChartController {
         this.dataLiefengjiService = dataLiefengjiService;
         this.dataQingxiejiService = dataQingxiejiService;
         this.dataZhenxianjiService = dataZhenxianjiService;
+        this.dataZhenxianjiUnitService = dataZhenxianjiUnitService;
     }
 
     @ApiOperation(value = "数据图表页面路由", notes = "前往图表查看页面，通过Model携带用户可查看的DTU列表")
@@ -104,14 +107,23 @@ public class ChartController {
         if (device == null) {
             return new JsonResult(-1, "设备不存在");
         }
+        // 查询设备的单位
+        DataZhenxianjiUnit zhenxianDeviceUnit = dataZhenxianjiUnitService.getOne(new QueryWrapper<DataZhenxianjiUnit>().eq("zhenxian_device_id", device.getDeviceId()));
+        //存数据
+        HashMap<String, Object> dataMap = new HashMap<>();
+        //存单位
+        dataMap.put("unit",zhenxianDeviceUnit);
         // 根据类型不同返回不同的数据
         switch (device.getDeviceType()) {
             case "liefengji":
-                return new JsonResult(0, "liefengji", dataLiefengjiService.list(new QueryWrapper<DataLiefengji>().eq("device_id", device.getDeviceId()).eq("date", date)));
+                dataMap.put("data",dataLiefengjiService.list(new QueryWrapper<DataLiefengji>().eq("device_id", device.getDeviceId()).eq("date", date)));
+                return new JsonResult(0, "liefengji", dataMap);
             case "qingxieji":
-                return new JsonResult(0, "qingxieji", dataQingxiejiService.list(new QueryWrapper<DataQingxieji>().eq("device_id", device.getDeviceId()).eq("date", date)));
+                dataMap.put("data",dataQingxiejiService.list(new QueryWrapper<DataQingxieji>().eq("device_id", device.getDeviceId()).eq("date", date)));
+                return new JsonResult(0, "qingxieji", dataMap);
             case "zhenxianji":
-                return new JsonResult(0, "zhenxianji", dataZhenxianjiService.list(new QueryWrapper<DataZhenxianji>().eq("device_id", device.getDeviceId()).eq("date", date)));
+                dataMap.put("data",dataZhenxianjiService.list(new QueryWrapper<DataZhenxianji>().eq("device_id", device.getDeviceId()).eq("date", date)));
+                return new JsonResult(0, "zhenxianji", dataMap);
             default:
                 return new JsonResult(-1, "此设备未定义设备类型，无法获取数据，请在设备管理中定义设备类型");
         }
