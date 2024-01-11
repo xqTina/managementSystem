@@ -39,7 +39,7 @@ layui.use(['form', 'laydate', 'util','table','treeTable'], function () {
             layer.closeAll('loading');
         },
         error:function (){
-            layer.msg("请稍等...");
+            // layer.msg("请稍等...");
 
             treetable.reload('LAY-zhenxianji-table')
         }
