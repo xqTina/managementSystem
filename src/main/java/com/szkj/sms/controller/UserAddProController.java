@@ -302,8 +302,13 @@ public class UserAddProController {
                 DataZhenXianJiNewDto xianJiNewDto = new DataZhenXianJiNewDto();
                 QueryWrapper<Device> deviceQueryWrapper = new QueryWrapper<Device>()
                         .eq("id",deviceUser.getDeviceId())
-                        .eq("is_delete",0).eq("is_delete",0);
-                Device device = deviceService.list(deviceQueryWrapper).get(0);
+                        .eq("is_delete",0);
+//                Device device = deviceService.list(deviceQueryWrapper).get(0);
+                List<Device> deviceList = deviceService.list(deviceQueryWrapper);
+                if(deviceList.size() == 0){
+                    continue;
+                }
+                Device device= deviceList.get(0);
 
                 QueryWrapper<Dtu> dtuQueryWrapper1 = new QueryWrapper<Dtu>()
                         .eq("id",device.getDtuId())
@@ -362,6 +367,8 @@ public class UserAddProController {
                 }
             }
         }
+
+        System.out.println("newDtoArrayList.size() = " + newDtoArrayList.size());
         for (DataZhenXianJiNewDto xianJiNewDto : newDtoArrayList) {
             System.out.println("xianJiNewDto = " + xianJiNewDto);
         }
@@ -371,6 +378,17 @@ public class UserAddProController {
 
         newDtoArrayList.sort((o1, o2) -> Integer.valueOf(o2.getIsOnline()) - Integer.valueOf(o1.getIsOnline()));
         request.getSession().setAttribute("dtuData",newDtoArrayList);
+
+        for (DataZhenXianJiNewDto xianJiNewDtos : newDtoArrayList) {
+            System.out.println("xianJiNewDtos = " + xianJiNewDtos);
+        }
+
+
+        List<DataZhenXianJiNewDto>dtuData = (List<DataZhenXianJiNewDto>) request.getSession().getAttribute("dtuData");
+        System.out.println("dtuData.size() = " + dtuData.size());
+        for (DataZhenXianJiNewDto dtuDatum : dtuData) {
+            System.out.println("dtuDatum = " + dtuDatum);
+        }
         return new JsonResult(0, "success","");
 
 
@@ -386,8 +404,10 @@ public class UserAddProController {
                                  @RequestParam(defaultValue = "10", value = "limit") Integer limit,HttpServletRequest request) {
 
         List<DataZhenXianJiNewDto>dtuData = (List<DataZhenXianJiNewDto>) request.getSession().getAttribute("dtuData");
-
-
+        System.out.println("dtuData.size() = " + dtuData.size());
+        for (DataZhenXianJiNewDto dtuDatum : dtuData) {
+            System.out.println("dtuDatum = " + dtuDatum);
+        }
 
             // 进行分页
             List<DataZhenXianJiNewDto> subList = dtuData.stream().skip((page-1)*limit).limit(limit).
