@@ -1,6 +1,6 @@
 # 应用服务 WEB 访问端口
 server:
-  port: 8083
+  port: 8081
 
 spring:
   application:

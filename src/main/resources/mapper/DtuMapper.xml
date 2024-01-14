@@ -31,14 +31,14 @@
     </sql>
 
     <select id="getUserDeviceDtu" resultMap="BaseResultMap">
-        select
+        select DISTINCT
         <include refid="Base_Column_List"/>
         from
         <include refid="Base_Table_List"/>
         where
         <include refid="Base_Link_Conditions"/>
         and
-        user.`name` = #{name}
+        user.`username` = #{name}
     </select>
 
     <select id="getUserDeviceDtuCount" resultType="java.lang.Integer">
@@ -48,7 +48,7 @@
         where
         <include refid="Base_Link_Conditions"/>
         and
-        user.`name` = #{name}
+        user.`username` = #{name}
     </select>
 
 
